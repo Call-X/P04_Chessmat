@@ -2,22 +2,22 @@ class GameView:
 
     def new_tournament(self):
         tournament_name = input("enter the Name of this Tourament : ")
-        tournament_location = input("Entrez le lieu du tournoi : ")
-        tournament_start_date = input("Entrez la date de debut du tournoi (JJ/MM/AAAA) : ")
-        tournament_end_date = input("Entrez la date de fin du tournoi (JJ/MM/AAAA) : ")
-        tournament_player_number = input("Entrez le nombre de participant : ")
-        tournament_max_turn = input("Entrez le nombre de tour (doit etre inferieur au nombre de joueur : ")
-        tournament_play_style = input("Entrer le style de partie (bullet / blitz / coup rapide) : ")
+        tournament_location = input("Enter the location of the tournament : ")
+        tournament_start_date = input("Enter the start date oe the tournament (JJ/MM/AAAA) : ")
+        tournament_end_date = input("Enter the end date of the tournament (JJ/MM/AAAA) : ")
+        tournament_player_number = input("Enter the number of players : ")
+        tournament_max_round = input("Enter the number of rounds : ")
+        tournament_game_style = input("Enter the Game style (bullet / blitz / short move) : ")
         return (tournament_name, tournament_location, tournament_start_date, tournament_end_date,
-                tournament_max_turn, tournament_player_number, tournament_play_style)
+                tournament_max_round, tournament_player_number, tournament_game_style)
 
     def score_asking(self, match):
         print(f"-- {match.p1.shorted} vs {match.p2.shorted} -- ")
-        print(f"Entrez le chiffre correspondant au résultat\n"
-              f"[1] Victoire de {match.p1.first_name}\n"
-              f"[2] Victoire de {match.p2.first_name}\n"
+        print(f"Enter the result of the match\n"
+              f"[1] {match.p1.first_name}\n Is Victorious  "
+              f"[2] {match.p2.first_name}\n Loose "
               "[3] Egalité\n")
-        return input("Votre réponse : ")
+        return input("Your Answer : ")
 
     def tournament_index_asking(self, tournoi_list):
         for index, tournament in enumerate(tournoi_list):
