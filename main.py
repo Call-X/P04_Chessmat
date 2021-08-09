@@ -1,4 +1,7 @@
 from Model import player
+from View import menu
+
+
 
 
 Player1 = player.Player("bogo", "kevin", 12, "12ème")
