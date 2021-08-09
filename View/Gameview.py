@@ -23,18 +23,19 @@ class GameView:
         for index, tournament in enumerate(tournoi_list):
             print(f"[{index}] - {tournament.name}")
 
-        choice = int(input("Entrez le numero du tournoi de votre choix : "))
+        option = int(input("Entrez le numero du tournoi de votre choix : "))
 
-        return choice
+        return option
 
     def tournament_load_asking(self):
 
-        print("Voulez vous \n[0] Charger un tournoi existant\n[1] Créer un nouveau tournoi\n[2] Quitter")
-        choice = input("Réponse : ")
-        return choice
+        print("you choose to \n[0] Load a Playing tournament\n[1] Creat a new Tournament\n[2] Consult an old Tournament"
+              "\n[3]Quit")
+        option = input("Answer : ")
+        return option
 
     def display_tournament_rounds(self, tournament):
-        print(f"---- Liste des tours du tournoi {tournament.name} ----")
+        print(f"---- Tournament list {tournament.name} ----")
         for round in tournament.round_list:
             print(round)
 
@@ -46,22 +47,19 @@ class GameView:
                   f"{player2} / Score : {match[1][1]}")
 
     def display_ranking(self, players):
-        print("---- CLASSEMENT ----")
+        print("---- Ranking ----")
         for index, p in enumerate(players):
             player, score = p
-            print(f"[{index + 1}] - {player.first_name} {player.last_name} / Score : {score}")
-
-    def display_no_tournament(self):
-        print("Il n'y a aucun tournoi")
+            print(f"[{index + 1}] - {player.first_name} {player.familly_name} / Score : {score}")
 
     def display_turn(self):
-        print("C'est le début du tour")
+        print("Start of the round")
 
     def display_end_match(self):
-        print('Fin des matchs !')
+        print('Check Mat')
 
     def display_tournament_player(self, tournament, player_list):
-        print(f"---- {tournament.name} ----")
+        print(f"---- {tournament.familly_name} ----")
         for player in player_list:
             print(player)
             print("-" * 70)
@@ -79,7 +77,7 @@ class GameView:
                 print(match)
 
     def display_round_tournaments(self, round_list):
-        print('Liste de match')
+        print('match list')
         print('|'.join([
             "Name".center(20),
             "Match Count".center(20),
@@ -89,8 +87,8 @@ class GameView:
         for round in round_list:
             print(round)
 
-    def ask_stop_tournament(self):
-        print("Voulez vous continuer le tournoi ?")
-        print('[0] - Oui\n[1] - Non\n')
-        choice = input('Votre réponse : ')
-        return choice
+    def stop_tournament_asking(self):
+        print("Do you want to continue this tournament?")
+        print('[0] - Yes\n[1] - Not\n')
+        option = input('Your answer : ')
+        return option
