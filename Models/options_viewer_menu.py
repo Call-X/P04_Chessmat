@@ -1,16 +1,15 @@
-from Controls.control_game import *
+
 
 class MenuInput:
     def __init__(self, option, handler):
         self.option = option
         self.handler = handler
 
-    def __repr__(self):
-        return f"MenuInput({self.option},{self.handler})"
+
 
 class Menu:
     def __init__(self):
-        self.input = {}
+        self._entries = {}
         self.autokey = 1
 
 
@@ -18,16 +17,16 @@ class Menu:
         if key == "auto":
             key = str(self.autokey)
             self.autokey += 1
-        self.input[str(key)] = MenuInput(option, handler)
+        self._entries[str(key)] = MenuInput(option, handler)
 
     def items(self):
-        return self.input.items()
+        return self._entries.items()
 
     def __contains__(self, choice):
-        return str(choice) in self.input
+        return str(choice) in self._entries
 
     def __getitem__(self, choice):
-        return self.input[choice]
+        return self._entries[choice]
 
 
 
@@ -41,7 +40,7 @@ class Menu:
 #     menu.append("auto", "Minority menu ", MinorityReportMenuControl()), "\n",
 #     menu.append("auto", "Sub-report menu", SubReportMenuControl()), "\n",
 #     menu.append("auto", "Quit", SubReportMenuControl()), "\n"
-#     print(menu.input)
+#     print(menu._entries)
 
 
 

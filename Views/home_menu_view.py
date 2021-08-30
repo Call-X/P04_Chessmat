@@ -1,6 +1,4 @@
 from Models.options_viewer_menu import Menu
-
-
 # report_menu = [
 #     "Player list", "\n", "Current player list", "\n", "All tournament list", "\n",
 #     "All match list of the Tournament", "\n", "All round list of the Tournament", "\n", "Return"]
@@ -13,16 +11,13 @@ from Models.options_viewer_menu import Menu
 class HomeMenuView:
     input = {}
 
-
     def __init__(self, menu):
-        self.menu = Menu()
+        self.menu = menu
 
     def menu_display(self):
         print("Welcome to the Game Menu")
         for key, entry in self.menu.items():
             print(f"{key}: {entry.option}")
-
-
 
             # retourner de le choix de l'utilisateur
 
@@ -32,32 +27,24 @@ class HomeMenuView:
         #     if choice in self.menu:
         #         return self.menu(choice)
         while True:
+            self.menu_display()
+            choice = input(">>")
+            if choice in self.menu:
+                print("You are in")
+                return self.menu[choice]
 
-            try:
-                print("[1] Tournament Launcher",
-                      "[2] Add player",
-                      "[3] Modifie a ranking player",
-                      "[4] Minority Report",
-                      "[5] Quit",
-                      "CHOOSE YOUR OPTION : ",
-                      sep='\n')
-                choice = input()
-                if choice in self.menu:
-                    print('you are in')
-
-                elif choice not in self.menu:
-                    print('Option no available')
-                    continue
-                else:
-                    break
-            except ValueError:
-                print('ENTER A NUMBER')
+            elif choice not in self.menu:
+                print('Option no available, "\n', "Please enter a number between 1 and 6")
                 continue
+            else:
+                break
 
-        return self.menu.choice
 
 
-=
+
+
+
+
 
     #     while True:
     #         try:

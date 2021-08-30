@@ -1,6 +1,6 @@
 
 from Views.home_menu_view import HomeMenuView
-from Models.options_viewer_menu import *
+from Models.options_viewer_menu import Menu
 
 
 class ControlGame:
@@ -23,16 +23,48 @@ class HomeMenuControl:
 
     def __call__(self):
         #construction du menu
-        self.menu.append("auto", "Tounament Launcher", NewTournamentControl()),"\n"
+        self.menu.append("auto", "Tounament Launcher", TournamentControl()),"\n"
         self.menu.append("auto", "create player", PlayerControl()), "\n"
         self.menu.append("auto", "Ranking modification", RankingControl()), "\n"
         self.menu.append("auto", "Minority menu ", MinorityReportMenuControl()), "\n"
         self.menu.append("auto", "Sub-report menu", SubReportMenuControl()), "\n"
         self.menu.append("auto", "Quit", SubReportMenuControl()), "\n"
+
         #demander a la vue d'afficher le menu et collecter la réponse de 'lutilisateur
         user_choice = self.view.get_user_choice()
+
         #retrouner le controller associé au choix de  l'utilisateur au controller principal
         return user_choice.handler
+
+
+
+class TournamentControl:
+    def __call__(self):
+        print(" Trounament Launcher")
+
+
+class PlayerControl:
+    def __call__(self):
+        print(" Create Player")
+
+
+class RankingControl:
+    def __call__(self):
+        print("Modify the rank")
+
+
+class MinorityReportMenuControl:
+    def __call__(self):
+        print("Consulting the Minority report")
+
+class SubReportMenuControl:
+    def __call__(self):
+        print("Consulting the sub-report menu or want to quit")
+
+
+
+
+
 
 
 
@@ -85,29 +117,16 @@ class Option:
     pass
 
 
-class RankingControl:
-    pass
-
-
-class RoundsControl:
-    pass
-
-
-class MinorityReportMenuControl:
-    pass
-
-
-class SubReportMenuControl:
-    pass
-
-
-class NewTournamentControl:
-    def __call__(self):
-        print("In the NewTournament Control")
 
 
 
 
-class PlayerControl:
-    pass
+
+
+
+
+
+
+
+
 
