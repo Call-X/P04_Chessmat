@@ -1,19 +1,19 @@
-class TournamentMenuInput:
+class SubReportMenuInput:
     def __init__(self, option, handler):
         self.option = option
         self.handler = handler
 
 
-class TournamentMenu:
+class SubReportMenu:
     def __init__(self):
         self._entries = {}
         self.autokey = 1
 
-    def _add_menu(self, key, option,handler):
+    def _add_menu(self, key, option, handler):
         if key == "auto":
             key = str(self.autokey)
             self.autokey += 1
-        self._entries[str(key)] = TournamentMenuInput(option, handler)
+        self._entries[str(key)] = SubReportMenuInput(option, handler)
 
     def object(self):
         return self._entries.items()
@@ -23,5 +23,3 @@ class TournamentMenu:
 
     def __getitem__(self, choice):
         return self._entries[choice]
-
-

@@ -1,9 +1,26 @@
+class PlayerMenuInput:
+    def __init__(self, option, handler):
+        self.option = option
+        self.handler = handler
 
-class Player:
-    def __init__(self, family_name, fisrt_name, age, ranking):
-        self.family_name = family_name
-        self.first_name = fisrt_name
-        self.age = age
-        self.ranking = int(ranking)
-        pass
 
+class PlayerMenu:
+    def __init__(self):
+        self._entries = {}
+        self.autokey = 1
+
+    def _add_menu(self, key, option, handler):
+        if key == "auto":
+            key = str(self.autokey)
+            self.autokey += 1
+
+        self._entries[str(key)] = PlayerMenuInput(option, handler)
+
+    def object(self):
+        return self._entries.items()
+
+    def __contains__(self, choice):
+        return str(choice) in self._entries
+
+    def __getitem__(self, choice):
+        return self._entries[choice]

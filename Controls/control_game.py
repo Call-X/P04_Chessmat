@@ -1,10 +1,14 @@
 
 from Views.home_menu_view import HomeMenuView
 from Models.options_viewer_menu import Menu
+from Controls.control_tournament import TournamentControl
+from Controls.control_player import PlayerControl
+from Controls.control_minority_report import MinorityReportMenuControl
+from Controls.control_sub_report import SubReportMenuControl
+from Controls.control_screen import ScreenControl
 
 
 class ControlGame:
-
 
     def __init__(self):
         self.control = None
@@ -23,12 +27,12 @@ class HomeMenuControl:
 
     def __call__(self):
         #construction du menu
-        self.menu.append("auto", "Tounament Launcher", TournamentControl()),"\n"
-        self.menu.append("auto", "create player", PlayerControl()), "\n"
-        self.menu.append("auto", "Ranking modification", RankingControl()), "\n"
-        self.menu.append("auto", "Minority menu ", MinorityReportMenuControl()), "\n"
-        self.menu.append("auto", "Sub-report menu", SubReportMenuControl()), "\n"
-        self.menu.append("auto", "Quit", SubReportMenuControl()), "\n"
+        self.menu._add_menu("auto", "Tounament Launcher", TournamentControl()),"\n"
+        self.menu._add_menu("auto", "create player", PlayerControl()), "\n"
+        self.menu._add_menu("auto", "Ranking modification", PlayerControl()), "\n"
+        self.menu._add_menu("auto", "Minority menu ", MinorityReportMenuControl()), "\n"
+        self.menu._add_menu("auto", "Sub-report menu", SubReportMenuControl()), "\n"
+        self.menu._add_menu("auto", "Quit", ScreenControl()), "\n"
 
         #demander a la vue d'afficher le menu et collecter la réponse de 'lutilisateur
         user_choice = self.view.get_user_choice()
@@ -36,85 +40,6 @@ class HomeMenuControl:
         #retrouner le controller associé au choix de  l'utilisateur au controller principal
         return user_choice.handler
 
-
-
-class TournamentControl:
-    def __call__(self):
-        print(" Trounament Launcher")
-
-
-class PlayerControl:
-    def __call__(self):
-        print(" Create Player")
-
-
-class RankingControl:
-    def __call__(self):
-        print("Modify the rank")
-
-
-class MinorityReportMenuControl:
-    def __call__(self):
-        print("Consulting the Minority report")
-
-class SubReportMenuControl:
-    def __call__(self):
-        print("Consulting the sub-report menu or want to quit")
-
-
-
-
-
-
-
-
-        # while True:
-        #     menu_option = self.view.game_view_options()
-        #     if menu_option == 1:
-        #         self.menu.append("[1]", "Tounament Launcher", NewTournamentControl())
-        #     elif menu_option == 2:
-        #         while True:
-        #             self.control_player.create_new_player()
-        #             option = self.view.ask_validation('Create new player ?')
-        #             self.control_player.save_player_list()
-        #             if option == "0":
-        #                 continue
-        #             elif option == "1":
-        #                 break
-        #     elif menu_option == 3:
-        #         self.menu.append("[3]", "Ranking modification", RankingControl())
-        #     elif menu_option == 4:
-        #         self.menu.append("[4]", "Minority menu ", MinorityReportMenuControl())
-        #     elif menu_option == 5:
-        #         self.menu.append("[5]", "Sub-report menu", SubReportMenuControl())
-        #     elif menu_option == 6:
-        #         self.menu.append("[6]", "Quit", SubReportMenuControl())
-        #         break
-
-        # return menu_option.handler
-
-
-
-
-
-    # def home_menu(self):
-    #     pass
-    #
-    # def connexion_menu(self):
-    #     pass
-
-        # # 2 . Demander à la vue d'afficher le menu et collecter les réponses de l'utilisateur
-        # user_option = self.view.get_user_option()
-        # user_sub_option = self.view.get_user_sub_option()
-        #
-        # # 3 . Retourner le controller lié au choix de l'utilisateur au controleur principal
-        # return user_option. , user_sub_option.handler
-
-
-
-
-class Option:
-    pass
 
 
 
