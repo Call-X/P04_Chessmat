@@ -1,47 +1,32 @@
-class Player:
+
+
+class PlayerView:
     input = {}
 
     def __init__(self, player):
         self.player = player
-
-    def ask_player_index_display(self):
-        while True:
-            print("Index {} Player Full Name ")
-            for key, entry in self.player.object():
-                print(f"{key}: {entry.option}")
-
-    def ask_new_rank_display(self, player):
-        while True:
-            print(f'Actual Rank of {player.first_name} {player.familly_name} : {player.rank}')
-            for key, entry in self.player.object():
-                print(f"{key}: {entry.option}")
-
-    def display_stat(self, player):
-        while True:
-            print(f"{player.first_name} - {player.last_name}  "
-                  f"Birthdate : {player.birth_date} - Genre : {player.gender}  "
-                  f"Rank : {player.rank}")
-
+        self.first_name = "first name"
+        self.familly_name = "familly name"
+        self.rank = "rank"
 
     def get_new_player(self):
         while True:
-            self.display_stat()
-            choice = input(">>")
+            self.first_name = input("Enter the fisrt name player: ").capitalize()
+            self.familly_name = input("Enter the last name player : ").capitalize()
+            self.rank = input("Player Rank : ")
+            choice = input()
             if choice in self.player:
                 return self.player[choice]
-            break
 
 
     def show_player_list(self, player_list):
         print(
             "Name", "\n"
             "Last Name", "\n"
-            "Birthdate", "\n"
-            "Gender", "\n"
             "Rank"
         )
-        for player in player_list:
-            print(player)
+        for self.player in player_list:
+            return self.get_new_player()
 
 
 
@@ -54,8 +39,32 @@ class Player:
 
 
 
+        # def ask_player_index_display(self):
+    #     while True:
+    #         print("Index {} Player Full Name ")
+    #         for key, entry in self.player.object():
+    #             print(f"{key}: {entry.option}")
+    #
+    # def ask_new_rank_display(self, player):
+    #     while True:
+    #         print(f'Actual Rank of {player.first_name} {player.familly_name} : {player.rank}')
+    #         for key, entry in self.player.object():
+    #             print(f"{key}: {entry.option}")
+
+    # def display_stat(self, player):
+    #     while True:
+    #         print(f"{player.first_name} - {player.last_name}  "
+    #               f"Rank : {player.rank}")
 
 
+    # def show_player_list(self, player_list):
+    #     print(
+    #         "Name", "\n"
+    #         "Last Name", "\n"
+    #         "Rank"
+    #     )
+    #     for self.player in player_list:
+    #         return self.get_new_player()
 
 
     # def ask_player_name_display(self):

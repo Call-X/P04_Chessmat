@@ -1,26 +1,16 @@
-class PlayerMenuInput:
-    def __init__(self, option, handler):
-        self.option = option
-        self.handler = handler
+from Views.player_viewer import PlayerView
 
 
-class PlayerMenu:
-    def __init__(self):
-        self._entries = {}
-        self.autokey = 1
+class Player:
 
-    def _add_menu(self, key, option, handler):
-        if key == "auto":
-            key = str(self.autokey)
-            self.autokey += 1
+    def __init__(self, choice=None):
+        self.choice = choice
+        self.next = None
+        self.view = PlayerView
 
-        self._entries[str(key)] = PlayerMenuInput(option, handler)
+    # def player_list(self):
+    #     while True :
+    #         self.player[ choice ].append
 
-    def object(self):
-        return self._entries.items()
 
-    def __contains__(self, choice):
-        return str(choice) in self._entries
 
-    def __getitem__(self, choice):
-        return self._entries[choice]

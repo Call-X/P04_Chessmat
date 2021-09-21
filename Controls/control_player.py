@@ -1,30 +1,54 @@
-from Views.player_viewer import Player
-from Models.player import PlayerMenu
+from Views.player_viewer import PlayerView
+
+
+
+
 
 class PlayerControl:
     def __init__(self):
         self.player = PlayerMenu()
-        self.view = Player(self.player)
+        self.view = PlayerView(self.player)
         self.player_list = []
-
 
     def __call__(self):
         print("~~~ Create or Modify a Player ~~~ ")
         while True:
-
-            self.first_name = input("Entrez le prenom du joueur : ").capitalize()
-            self.familly_name = input("Entrez le nom du joueur : ").capitalize()
-            self.player_index = input("Enter the index player : ")
-            self.new_rank = input("Enter the new rank : ")
-            self.birth_date = input("Date Of Birth (jj/mm/aaaa) : ").strip()
-            self.rank = input("Player Rank : ")
-
-
-        # demander a la vue d'afficher le menu et collecter la réponse de 'lutilisateur
+        #demander a la vue d'afficher le menu et collecter la réponse de 'lutilisateur
             user_choice = self.view.get_new_player()
-            self.player_list = self.view.get_new_player()
 
             return user_choice
+
+
+class PlayerMenuInput:
+    def __init__(self, option, handler):
+        self.option = option
+        self.handler = handler
+
+
+class PlayerMenu:
+    def __init__(self):
+        self._entries = {}
+        self.autokey = 1
+
+    def _add_menu(self, key, option, handler):
+        if key == "auto":
+            key = str(self.autokey)
+            self.autokey += 1
+
+        self._entries[str(key)] = PlayerMenuInput(option, handler)
+
+    def object(self):
+        return self._entries.items()
+
+    def __contains__(self, choice):
+        return str(choice) in self._entries
+
+    def __getitem__(self, choice):
+        return self._entries[choice]
+
+
+
+
 
 
 

@@ -1,50 +1,69 @@
 import sqlite3
-from Controls.control_player import Player
+from sqlite3 import Error
 
-class DataBaseService:
+
+
+
+class SingletonMeta(type):
+    """
+    The Singleton class can be implemented in different ways in Python. Some
+    possible methods include: base class, decorator, metaclass. We will use the
+    metaclass because it is best suited for this purpose.
+    """
+
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        """
+        Possible changes to the value of the __init__ argument do not affect
+        the returned instance.
+        """
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+
+
+class DataBaseService(metaclass=SingletonMeta):
+    connexion = None
+
     def __init__(self):
-        self.connection = sqlite3.connect("base_db.db")
-        self.cursor = self.connection.cursor()
-
         try:
+            self.connexion = sqlite3.connect("players.db")
+            print("CONNECTION SUCCEED. SQL LITE VERSION " + sqlite3.version)
+        except Error as e:
+            print(e)
 
-            player_list = {}
-            # tournament_list = []
+    def create_table(self):
+        cur = self.connexion.cursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS players(
+        id.integer PRIMARY KEY,
+        first  text NOT NULL,
+        familly  text NOT NULL,
+        rank real;''')
 
-            req = self.cursor.executemany("INSERT INTO table_players VALUES({},{},{},{},{})", player_list)
-            self.connection.commit()
-            print("{ New Player ADD }")
-            for row in req.fetchall():
-                print(row[1])
+    def insert_data(self):
 
-        except Exception as e:
-            print("[ERREUR]", e)
-            self.connection.rollback()
-        finally:
-            self.connection.close()
+        player_list = [('Camille', 'Lefebvre', '15'),
+                      ('Emile', 'Miath', '20'),
+                      ('Pierre', 'Raulet', '5'),
+                      ('Ben', 'JAoui', '10')]
 
-
-
-
-
-
+        cur = self.connexion.cursor()
+        cur.executemany('''INSERT INTO players ( first, familly, rank) VALUES ( ?, ?, ? )''', player_list)
+        self.connexion.commit()
 
 
+        return cur.lastrowid
+
+    def close(self):
+        if self.connexion:
+            self.connexion.close()
 
 
-# try:
-#     conn = MC.connect(host="localhost", database="datest", user="root", pasword="")
-#     cursor = conn.cursor()
-#     req = "Select * From playertable"
-#     cursor.execute(req)
-#
-#     playerlist = cursor.fetchall()
-#
-#     for player in playerlist:
-#
-# except MC.Error as err:
-#     print(err)
-# finally:
-#     if(conn.is_connected()):
-#         cursor.close()
-#         conn.close()
+db = DataBaseService()
+
+db.insert_data()
+
+
+

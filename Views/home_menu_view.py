@@ -19,7 +19,7 @@ class HomeMenuView:
     def get_user_choice(self):
         while True:
             self.menu_display()
-            choice = input(">>")
+            choice = input(">> choose you're options >>")
             if choice in self.menu:
                 print("°°°You are in°°° : ")
                 return self.menu[choice]
