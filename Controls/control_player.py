@@ -1,22 +1,23 @@
 from Views.player_viewer import PlayerView
-
+from Models.player import Player
+from Data_base import db
 
 
 
 
 class PlayerControl:
     def __init__(self):
-        self.player = PlayerMenu()
-        self.view = PlayerView(self.player)
-        self.player_list = []
+        self.player_menu = PlayerMenu()
+        self.view = PlayerView(self.player_menu)
 
     def __call__(self):
         print("~~~ Create or Modify a Player ~~~ ")
-        while True:
+        # while True:
         #demander a la vue d'afficher le menu et collecter la réponse de 'lutilisateur
-            user_choice = self.view.get_new_player()
+        player = self.view.get_new_player()
+        # self.view.get_new_player()
+        db.insert_data_player(player)
 
-            return user_choice
 
 
 class PlayerMenuInput:

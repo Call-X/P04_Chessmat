@@ -1,4 +1,4 @@
-
+from Models.player import Player
 
 class PlayerView:
     input = {}
@@ -10,23 +10,27 @@ class PlayerView:
         self.rank = "rank"
 
     def get_new_player(self):
+
         while True:
             self.first_name = input("Enter the fisrt name player: ").capitalize()
-            self.familly_name = input("Enter the last name player : ").capitalize()
+            self.familly_name = input("Enter the familly name player : ").capitalize()
             self.rank = input("Player Rank : ")
-            choice = input()
-            if choice in self.player:
-                return self.player[choice]
+            return Player(self.first_name, self.familly_name, self.rank)
 
 
-    def show_player_list(self, player_list):
-        print(
-            "Name", "\n"
-            "Last Name", "\n"
-            "Rank"
-        )
-        for self.player in player_list:
-            return self.get_new_player()
+
+
+
+
+
+    # def show_player_list(self, player_list):
+    #     print(
+    #         "Name", "\n"
+    #         "Last Name", "\n"
+    #         "Rank"
+    #     )
+    #     for self.player in player_list:
+    #         return self.get_new_player()
 
 
 

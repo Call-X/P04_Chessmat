@@ -15,12 +15,11 @@ class SubReportMenuView:
         while True:
             self.sub_report_menu_display()
             choice = input(">>")
+            print(choice)
             if choice in self.menu:
                 print("°°°You are in°°° : ")
                 return self.menu[choice]
-
-            elif choice not in self.menu:
+            else:
                 print('$$$ Option no available, "\n', "Please enter a number between 1 and 6 $$$")
                 continue
-            else:
-                break
+

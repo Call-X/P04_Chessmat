@@ -16,8 +16,8 @@ class SubReportMenuControl:
         print("Consulting the sub-report menu or want to quit")
         self.menu._add_menu("auto", "By id  ", PlayerControl()), "\n"
         self.menu._add_menu("auto", "By ranking ", PlayerControl()), "\n"
-        # self.menu._add_menu(" r ", "return", HomeMenuControl())
-        self.menu._add_menu(" q ", "quit", ScreenControl())
+        # self.menu._add_menu("r", "return", HomeMenuControl())
+        self.menu._add_menu("q", "quit", ScreenControl())
 
         user_choice = self.view.get_user_sub_choice()
         return user_choice.handler
