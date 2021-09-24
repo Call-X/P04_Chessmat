@@ -1,8 +1,5 @@
 from Views.player_viewer import PlayerView
-from Models.player import Player
 from Data_base import db
-
-
 
 
 class PlayerControl:
@@ -13,10 +10,11 @@ class PlayerControl:
     def __call__(self):
         print("~~~ Create or Modify a Player ~~~ ")
         # while True:
+
         #demander a la vue d'afficher le menu et collecter la réponse de 'lutilisateur
         player = self.view.get_new_player()
-        # self.view.get_new_player()
         db.insert_data_player(player)
+
 
 
 

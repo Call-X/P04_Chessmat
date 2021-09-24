@@ -18,30 +18,15 @@ class PlayerView:
             return Player(self.first_name, self.familly_name, self.rank)
 
 
-
-
-
-
-
-    # def show_player_list(self, player_list):
-    #     print(
-    #         "Name", "\n"
-    #         "Last Name", "\n"
-    #         "Rank"
-    #     )
-    #     for self.player in player_list:
-    #         return self.get_new_player()
-
-
-
-
-
-
-
-
-
-
-
+    def show_player_list(self, player_list):
+        while True:
+            print(
+                "Name", "\n"
+                "Last Name", "\n"
+                "Rank"
+            )
+            for self.player in player_list:
+                return self.get_new_player()
 
         # def ask_player_index_display(self):
     #     while True:
@@ -60,15 +45,6 @@ class PlayerView:
     #         print(f"{player.first_name} - {player.last_name}  "
     #               f"Rank : {player.rank}")
 
-
-    # def show_player_list(self, player_list):
-    #     print(
-    #         "Name", "\n"
-    #         "Last Name", "\n"
-    #         "Rank"
-    #     )
-    #     for self.player in player_list:
-    #         return self.get_new_player()
 
 
     # def ask_player_name_display(self):

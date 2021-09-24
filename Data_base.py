@@ -31,17 +31,12 @@ class DataBaseService(metaclass=SingletonMeta):
         except Error as e:
             print(e)
 
-    def create_table(self):
-        cur = self.connexion.cursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS players(
-        id.integer PRIMARY KEY,
-        first  text NOT NULL,
-        familly  text NOT NULL,
-        rank real;''')
+
 
     def insert_data_player(self, player):
 
         player = [(player.first_name, player.familly_name, player.rank)]
+
 
         cur = self.connexion.cursor()
         cur.executemany('''INSERT INTO players ( first, familly, rank) VALUES ( ?, ?, ? )''', player)
@@ -49,11 +44,23 @@ class DataBaseService(metaclass=SingletonMeta):
 
         return cur.lastrowid
 
-    def select_data_player(self, player):
-        pass
+    def select_data_player_by_rank(self):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT* FROM players ORDER BY rank')
+        for player in cur.fetchall():
+            print(player)
+
+    def select_data_player_by_name(self, familly_name):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT* FROM players WHERE familly := familly name', {'familly': familly_name})
+        return cur.fetchall()
 
     def erase_data_player(self, player):
-        pass
+        cur = self.connexion.cursor()
+        cur.execute("DELETE FROM players WHERE first:= first name AND familly name:= familly name",
+                    {'first name': player.first_name, 'familly name': player.familly_name})
+        for player in cur.fetchall():
+            print(player)
 
     def close(self):
         if self.connexion:
