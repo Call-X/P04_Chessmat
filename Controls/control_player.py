@@ -47,12 +47,11 @@ class PlayerControl:
             if choice_select == "1":
                 player = self.view.update_player()
                 db.update_player(player['familly_name'], player['first_name'], player['rank'], player['id'])
-                # for player in players:
                 print(player)
 
             if choice_select == "2":
                 player_id = self.view.erase_player_by_id()
-                db.erase_data_player_by_id(player_id)
+                db.erase_player_by_id(player_id)
                 print(player_id)
 
 

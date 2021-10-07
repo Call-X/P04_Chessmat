@@ -27,11 +27,72 @@ class DataBaseService(metaclass=SingletonMeta):
 
     def __init__(self):
         try:
-            self.connexion = sqlite3.connect("players.db")
+            self.connexion = sqlite3.connect("chessmat.db")
             print("CONNECTION SUCCEED. SQL LITE VERSION " + sqlite3.version)
         except Error as e:
             print(e)
 
+    '''Tournament'''
+    def tournament_list(self):
+        cur = self.connexion.cursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS tournaments(
+                id.integer PRIMARY KEY,       
+                tournament_name TEXT,
+                tournament_location TEXT,
+                tournament_start_date TEXT,
+                tournament_end_date TEXT,
+                tournament_player_number INTEGER,
+                tournament_max_turn INTEGER,
+                tournament_play_style TEXT;''')
+
+    def insert_data_tournament(self, tournament):
+        tournament = [(tournament.tournament_name, tournament.tournament_location, tournament.tournament_start_date,
+                       tournament.tournament_end_date, tournament.tournament_player_number,
+                       tournament.tournament_max_turn, tournament.tournament_play_style)]
+
+        cur = self.connexion.cursor()
+        cur.executemany('''INSERT INTO tournaments (tournament_name, tournament_location, tournament_start_date,
+        tournament_end_date, tournament_player_number, tournament_max_turn, tournament_play_style) VALUES ( ?, ?, ?, ?,
+         ?, ?, ? )''', tournament)
+        self.connexion.commit()
+
+        return cur.lastrowid
+
+    def select_data_tournament_by_id(self, tournament_id):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM tournaments WHERE id=?', (tournament_id,))
+        return cur.fetchone()
+
+    def consult_players_tournament(self):
+        pass
+
+    def consult_matchs_tournament(self):
+        pass
+
+    def update_tournament(self, tournament_name, tournament_location, tournament_start_date, tournament_end_date,
+                          tournament_player_number, tournament_max_turn, tournament_play_style, id):
+        cur = self.connexion.cursor()
+        cur.execute("UPDATE tournaments SET tournament_name=?, tournament_location=?, tournament_start_date=?,tournament_end_date=?, tournament_player_number=?, tournament_max_turn=?, tournament_play_style=? WHERE id=?",
+                    (tournament_name, tournament_location, tournament_start_date, tournament_end_date,
+                     tournament_player_number, tournament_max_turn, tournament_play_style, id))
+        self.connexion.commit()
+        print("Tournament updated!")
+
+    def erase_data_player_by_id(self, tournament_id):
+        cur = self.connexion.cursor()
+        cur.execute('DELETE FROM tournaments WHERE id=?', (tournament_id,))
+        self.connexion.commit()
+        print("Tournament deleted!")
+        return cur.fetchone()
+
+
+
+
+
+
+
+
+    '''players'''
     def player_list(self):
         cur = self.connexion.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS players(
@@ -76,7 +137,7 @@ class DataBaseService(metaclass=SingletonMeta):
         cur.execute('SELECT * FROM players WHERE id=?', (player_id,))
         return cur.fetchone()
 
-    def erase_data_player_by_id(self, player_id):
+    def erase_player_by_id(self, player_id):
         cur = self.connexion.cursor()
         cur.execute('DELETE FROM players WHERE id=?', (player_id,))
         self.connexion.commit()
@@ -98,99 +159,7 @@ class DataBaseService(metaclass=SingletonMeta):
 
 db = DataBaseService()
 
-# id.integer PRIMARY KEY,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# DB_name = 'ChessDB'
-#
-#
-# def connect_to_db(db=None):
-#     if db is None:
-#         chessdb = ':memory:'
-#         print('new connection to in-memory SQLite DB...')
-#     else:
-#         chessdb = '{}.db'.format(db)
-#         print('New connection to SQLite DB...')
-#     connection = sqlite3.connect(chessdb)
-#     return connection
-#
-# def connect(func):
-#
-#     def inner_func(conn, *args, **kwargs):
-#         try:
-#             conn.execute('SELECT name FROM sqlite_temp_master WHERE type="table";')
-#         except (AttributeError, Error):
-#             conn = connect_to_db(DB_name)
-#         return func(conn, *args, **kwargs)
-#
-#     return inner_func
-#
-# def disconnect_from_db(db=None, conn=None):
-#     if db is not DB_name:
-#         print("Your are trying to disconnect from a wrong DB")
-#     if conn is not None:
-#         conn.close()
-#
-# @connect
-# def create_table(conn, table_name):
-#     table_name = scrub(table_name)
-#     sql = 'CREATE TABLE {} (rowid INTEGER PRIMARY KEY AUTOINCREMENT,' \
-#     'name TEXT UNIQUE, price REAL, quantity INTEGER)'.format(table_name)
-#     try:
-#         conn.execute(sql)
-#     except Error as e :
-#         print(e)
-#
-# def scrub(input_string):
-#     return ''.join(k for k in input_string if k.isalnum())
-#
-#
-# @connect
-# def insert_one(conn, first_name, familly_name, rank, table_name):
-#     table_name = scrub(table_name)
-#     sql = "INSERT INTO {} ('name', 'price', 'quantity') VALUES (?, ?, ?)"\
-#         .format(table_name)
-#     try:
-#         conn.execute(sql, (first_name, familly_name, rank))
-#         conn.commit()
-#     except Error as e:
-#         print(
-#             '{}: "{}" already stored in table "{}"'.format(e, first_name, table_name))
-#
-# @connect
-# def insert_many(conn, items, table_name):
-#     table_name = scrub(table_name)
-#     sql = "INSERT INTO {} ('first name', 'familly name', 'rank') VALUES (?, ?, ?)"\
-#         .format(table_name)
-#     entries = list()
-#     for x in items:
-#         entries.append((x['first name'], x['familly name'], x['rank']))
-#     try:
-#         conn.executemany(sql, entries)
-#         conn.commit()
-#     except Error as e:
-#         print('{}: at least one in {} was already stored in table "{}"'
-#               .format(e, [x['first name'] for x in items], table_name))
-#
-# def tuple_to_dict(mytuple):
-#     mydict = dict()
-#     mydict['id'] = mytuple[0]
-#     mydict['first name'] = mytuple[1]
-#     mydict['familly name'] = mytuple[2]
-#     mydict['rank'] = mytuple[3]
-#     return mydict
 
 
 

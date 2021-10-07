@@ -13,7 +13,6 @@ class PlayerView:
 
     def get_new_player(self):
         while True:
-            # self.player_id = input("Enter the id player: ")
             self.first_name = input("Enter the fisrt name player: ").capitalize()
             self.familly_name = input("Enter the familly name player : ").capitalize()
             self.rank = input("Player Rank : ")
@@ -72,30 +71,12 @@ Welcome to the Player Selecter modification Menu
         return player_id
 
 
-        # player_familly_name = input("What is the familly name of the player(s) you want to erase? : ")
-        # player_first_name = input("What is the first name of the player(s) you want to erase? : ")
-        # player_rank = input("What is the rank of the player(s) you want to erase? : ")
-        # return player_familly_name, player_first_name, player_rank
-
     def update_player(self):
         player_familly_name = input("What is the familly name of the player(s) you want to update? : ")
         player_first_name = input("What is the first name of the player(s) you want to update? : ")
         player_rank = input("What is the rank of the player(s) you want to update? : ")
         player_id = input("What is the id of the player(s) you want to update? : ")
-        # return [player_familly_name, player_first_name, player_rank, player_id]
         return {'familly_name': player_familly_name, 'first_name': player_first_name, 'rank': player_rank,
                 'id': player_id}
 
-
-
-
-    # def show_player_list(self, player_list):
-    #     while True:
-    #         print(
-    #             "Name", "\n"
-    #             "Last Name", "\n"
-    #             "Rank"
-    #         )
-    #         for self.player in player_list:
-    #             return self.get_new_player()
 
