@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 
+
 class SingletonMeta(type):
     """
     The Singleton class can be implemented in different ways in Python. Some
@@ -31,36 +32,64 @@ class DataBaseService(metaclass=SingletonMeta):
         except Error as e:
             print(e)
 
-
+    def player_list(self):
+        cur = self.connexion.cursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS players(
+        id.integer PRIMARY KEY,       
+        familly_name TEXT,
+        first_name TEXT,
+        rank INTEGER;''')
 
     def insert_data_player(self, player):
-
         player = [(player.first_name, player.familly_name, player.rank)]
 
-
         cur = self.connexion.cursor()
-        cur.executemany('''INSERT INTO players ( first, familly, rank) VALUES ( ?, ?, ? )''', player)
+        cur.executemany('''INSERT INTO players (familly_name, first_name, rank) VALUES ( ?, ?, ? )''', player)
         self.connexion.commit()
 
         return cur.lastrowid
 
-    def select_data_player_by_rank(self):
+    def select_all_players(self):
+
         cur = self.connexion.cursor()
-        cur.execute('SELECT* FROM players ORDER BY rank')
-        for player in cur.fetchall():
-            print(player)
+        cur.execute('SELECT * FROM players')
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
+
+    def select_data_player_order_by_rank(self):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM players ORDER BY rank')
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
 
     def select_data_player_by_name(self, familly_name):
         cur = self.connexion.cursor()
-        cur.execute('SELECT* FROM players WHERE familly := familly name', {'familly': familly_name})
+        cur.execute('SELECT * FROM players WHERE familly=?', (familly_name,))
         return cur.fetchall()
 
-    def erase_data_player(self, player):
+    def select_data_player_by_id(self, player_id):
         cur = self.connexion.cursor()
-        cur.execute("DELETE FROM players WHERE first:= first name AND familly name:= familly name",
-                    {'first name': player.first_name, 'familly name': player.familly_name})
-        for player in cur.fetchall():
-            print(player)
+        cur.execute('SELECT * FROM players WHERE id=?', (player_id,))
+        return cur.fetchone()
+
+    def erase_data_player_by_id(self, player_id):
+        cur = self.connexion.cursor()
+        cur.execute('DELETE FROM players WHERE id=?', (player_id,))
+        self.connexion.commit()
+        print("Player deleted!")
+        return cur.fetchone()
+
+    def update_player(self, familly_name, first_name, rank, id):
+        cur = self.connexion.cursor()
+        cur.execute("UPDATE players SET familly_name=?, first_name=?, rank=? WHERE id=?",
+                    (familly_name, first_name, rank, id))
+        self.connexion.commit()
+        print("Player updated!")
+
 
     def close(self):
         if self.connexion:
@@ -69,7 +98,7 @@ class DataBaseService(metaclass=SingletonMeta):
 
 db = DataBaseService()
 
-
+# id.integer PRIMARY KEY,
 
 
 

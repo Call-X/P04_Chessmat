@@ -15,7 +15,7 @@ class HomeMenuControl:
     def __call__(self):
         #construction du menu
         self.menu._add_menu("auto", "Tounament Launcher", TournamentControl()),"\n"
-        self.menu._add_menu("auto", "create player", PlayerControl()), "\n"
+        self.menu._add_menu("auto", "Player Management", PlayerControl()), "\n"
         self.menu._add_menu("auto", "Ranking modification", PlayerControl()), "\n"
         self.menu._add_menu("auto", "Minority menu ", MinorityReportMenuControl()), "\n"
         self.menu._add_menu("auto", "Sub-report menu", SubReportMenuControl()), "\n"

@@ -1,5 +1,6 @@
 from Models.player import Player
 
+
 class PlayerView:
     input = {}
 
@@ -8,82 +9,93 @@ class PlayerView:
         self.first_name = "first name"
         self.familly_name = "familly name"
         self.rank = "rank"
+        self.player_id = 'id'
 
     def get_new_player(self):
-
         while True:
+            # self.player_id = input("Enter the id player: ")
             self.first_name = input("Enter the fisrt name player: ").capitalize()
             self.familly_name = input("Enter the familly name player : ").capitalize()
             self.rank = input("Player Rank : ")
             return Player(self.first_name, self.familly_name, self.rank)
 
-
-    def show_player_list(self, player_list):
+    def choose_option_player(self):
         while True:
-            print(
-                "Name", "\n"
-                "Last Name", "\n"
-                "Rank"
-            )
-            for self.player in player_list:
-                return self.get_new_player()
+            choice = input('''
+Welcome to the Player Menu
+1: Create player
+2: Select options player
+3: Modify player
+5: Quit
+>> choose you're options >>''')
 
-        # def ask_player_index_display(self):
+            return choice
+
+    def select_options_players(self):
+        choice = input('''
+Welcome to the Player Selecter Menu
+1: Select player by name
+2: Select player by rank
+3: Select player by id
+4: Select all players
+5: Quit
+ 
+>> choose you're options >>''')
+        return choice
+
+    def select_modification_players(self):
+        choice = input('''
+Welcome to the Player Selecter modification Menu
+1: Update player
+2: Erase player
+5: Quit
+
+>> choose you're options >>''')
+        return choice
+
+    def select_players_by_name(self):
+        player_familly_name = input("What is the familly name of the player(s)? : ")
+        return player_familly_name
+
+    def select_players_by_rank(self):
+        player_rank = input("What is the rank of the player(s)? : ")
+        return player_rank
+
+
+    def select_players_by_id(self):
+        player_id = input("What is the id of the player(s)? : ")
+        return player_id
+
+
+    def erase_player_by_id(self):
+        player_id = input("What is the id of the player(s) you want to erase? : ")
+        return player_id
+
+
+        # player_familly_name = input("What is the familly name of the player(s) you want to erase? : ")
+        # player_first_name = input("What is the first name of the player(s) you want to erase? : ")
+        # player_rank = input("What is the rank of the player(s) you want to erase? : ")
+        # return player_familly_name, player_first_name, player_rank
+
+    def update_player(self):
+        player_familly_name = input("What is the familly name of the player(s) you want to update? : ")
+        player_first_name = input("What is the first name of the player(s) you want to update? : ")
+        player_rank = input("What is the rank of the player(s) you want to update? : ")
+        player_id = input("What is the id of the player(s) you want to update? : ")
+        # return [player_familly_name, player_first_name, player_rank, player_id]
+        return {'familly_name': player_familly_name, 'first_name': player_first_name, 'rank': player_rank,
+                'id': player_id}
+
+
+
+
+    # def show_player_list(self, player_list):
     #     while True:
-    #         print("Index {} Player Full Name ")
-    #         for key, entry in self.player.object():
-    #             print(f"{key}: {entry.option}")
-    #
-    # def ask_new_rank_display(self, player):
-    #     while True:
-    #         print(f'Actual Rank of {player.first_name} {player.familly_name} : {player.rank}')
-    #         for key, entry in self.player.object():
-    #             print(f"{key}: {entry.option}")
-
-    # def display_stat(self, player):
-    #     while True:
-    #         print(f"{player.first_name} - {player.last_name}  "
-    #               f"Rank : {player.rank}")
-
-
-
-    # def ask_player_name_display(self):
-    #     first_name = input("Entrez le prenom du joueur : ").capitalize()
-    #     familly_name = input("Entrez le nom du joueur : ").capitalize()
-    #     return first_name, familly_name
-
-
-    # def ask_player_index_display(self, players_list):
-    #     while True:
-    #         print("Index {} Player Full Name ")
-    #         for index, player in enumerate(players_list):
-    #             print(f"[{player.id}] - {player.last_name} {player.first_name} - {player.rank}")
-    #         player_index = input("Enter the index player : ")
-    #         return player_index
-
-
-
-    # def ask_new_rank_display(self, player):
-    #     while True:
-    #         print(f'Actual Rank of {player.first_name} {player.last_name} : {player.rank}')
-    #         new_rank = input("Enter the new rank : ")
-    #         return new_rank
-
-
-
-    # def ask_new_player(self, _first_name="", _familly_name=""):
-    #     while True:
-    #
-    #         if _first_name == "" and _familly_name == "":
-    #             first_name = input("First Name : ").strip()
-    #             familly_name = input("Familly Name : ").strip()
-    #         else:
-    #
-    #             first_name = _first_name.strip()
-    #             familly_name = _familly_name.strip()
-    #         birth_date = input("Date Of Birth (jj/mm/aaaa) : ").strip()
-    #         gender = input("Gender (H/F) : ").strip()
-    #         rank = input("Player Rank : ")
-    #         return first_name, familly_name, birth_date, gender, rank
-
+    #         print(
+    #             "Name", "\n"
+    #             "Last Name", "\n"
+    #             "Rank"
+    #         )
+    #         for self.player in player_list:
+    #             return self.get_new_player()
 
