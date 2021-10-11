@@ -34,19 +34,18 @@ class TournamentView:
 Welcome to the Tournament Menu
 1: Create Tournament
 2: Select options Tournament
-3: Modify tournament
-5: Quit
+3: Select modification Tournament
+4: Return to the main menu
 >> choose you're options >>''')
 
             return choice
 
     def select_options_tournament(self):
         choice = input('''
-Welcome to the Player Selecter Menu
+Welcome to the Tournament Selecter Menu
 1: Select Tournament by id
 2: Consult Player's Tournament
 3: Consult match's Tournament
-4: select_modification_tournament
 4: quit
 
 >> choose you're options >>''')
@@ -55,8 +54,8 @@ Welcome to the Player Selecter Menu
     def select_modification_tournament(self):
         choice = input('''
 Welcome to the Player Selecter modification Menu
-1: Update tournament
-2: Erase tournament
+1: Update tournament by id
+2: Erase tournament by id
 5: Quit
 
 >> choose you're options >>''')
@@ -93,6 +92,18 @@ Welcome to the Player Selecter modification Menu
     def erase_tournament_by_id(self):
         tournament_id = input("What is the id of the tournament you want to erase? : ")
         return tournament_id
+
+    def add_player_into_tournament(self):
+        player_id = input("Enter the id of the player to registered: ")
+        tournament_id = input("Enter the id of the tournament:")
+
+        return {'player_id': player_id, 'tournament_id': tournament_id}
+
+    def add_players_into_tournament(self, players):
+        for player in players:
+            print(player.id + " " + player.first_name + " " + player.familly_name)
+        player_ids = input("Enter id of each player you want to registered for this tournament (separated with coma \",\") ")
+        return player_ids
 
 
 

@@ -2,6 +2,8 @@ import sqlite3
 from sqlite3 import Error
 
 
+
+
 class SingletonMeta(type):
     """
     The Singleton class can be implemented in different ways in Python. Some
@@ -63,11 +65,6 @@ class DataBaseService(metaclass=SingletonMeta):
         cur.execute('SELECT * FROM tournaments WHERE id=?', (tournament_id,))
         return cur.fetchone()
 
-    def consult_players_tournament(self):
-        pass
-
-    def consult_matchs_tournament(self):
-        pass
 
     def update_tournament(self, tournament_name, tournament_location, tournament_start_date, tournament_end_date,
                           tournament_player_number, tournament_max_turn, tournament_play_style, id):
@@ -78,19 +75,12 @@ class DataBaseService(metaclass=SingletonMeta):
         self.connexion.commit()
         print("Tournament updated!")
 
-    def erase_data_player_by_id(self, tournament_id):
+    def erase_data_tournament_by_id(self, tournament_id):
         cur = self.connexion.cursor()
         cur.execute('DELETE FROM tournaments WHERE id=?', (tournament_id,))
         self.connexion.commit()
         print("Tournament deleted!")
         return cur.fetchone()
-
-
-
-
-
-
-
 
     '''players'''
     def player_list(self):
@@ -151,6 +141,66 @@ class DataBaseService(metaclass=SingletonMeta):
         self.connexion.commit()
         print("Player updated!")
 
+    '''table players in tournament'''
+    def player_registered_in_tournament(self):
+        cur = self.connexion.cursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS players_in_tournament(
+        id.integer PRIMARY KEY,
+        player_id INTEGER,
+        tournament_id INTEGER,
+        FOREIGN KEY(player_id) REFERENCES player(id),
+        FOREIGN KEY(tournament_id) REFERENCES tournament(id);''')
+
+
+    def add_player_into_tournament(self, player_id, tournament_id):
+        param = [(player_id, tournament_id)]
+        cur = self.connexion.cursor()
+        cur.executemany('''INSERT INTO players_in_tournament (player_id, tournament_id) VALUES ( ?, ? )''', param)
+        self.connexion.commit()
+        return cur.lastrowid
+
+
+
+
+    # def insert_player_registered_in_tournament(self, player_id):
+    #
+    #     cur = self.connexion.cursor()
+    #     cur.executemany('''INSERT INTO players_in_tournament (player_id) VALUES ( ? )''', player_id)
+    #     self.connexion.commit()
+    #
+    #     return cur.lastrowid
+    #
+    # def insert_tournament_contain_player(self, tournament_id):
+    #
+    #     cur = self.connexion.cursor()
+    #     cur.executemany('''INSERT INTO players_in_tournament (tournament_id) VALUES ( ? )''', tournament_id)
+    #     self.connexion.commit()
+    #
+    #     return cur.lastrowid
+
+    def select_player_registered_by_id(self, player_id):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM players_in_tournament WHERE id=?', (player_id,))
+        return cur.fetchone()
+
+    def select_tournament_contain_player_by_id(self, tournament_id):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM players_in_tournament WHERE id=?', (tournament_id,))
+        return cur.fetchone()
+
+    def erase_player_registered_by_id(self, player_id):
+        cur = self.connexion.cursor()
+        cur.execute('DELETE FROM players_in_tournament WHERE id=?', (player_id,))
+        self.connexion.commit()
+        print("Player deleted!")
+        return cur.fetchone()
+
+    def erase_tournament_contain_player_by_id(self, tournament_id):
+        cur = self.connexion.cursor()
+        cur.execute('DELETE FROM players_in_tournament WHERE id=?', (tournament_id,))
+        self.connexion.commit()
+        print("Tournament deleted!")
+        return cur.fetchone()
 
     def close(self):
         if self.connexion:
