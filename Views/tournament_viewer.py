@@ -1,4 +1,5 @@
 from Models.tournament import Tournament
+from Views.player_viewer import PlayerView
 
 
 class TournamentView:
@@ -13,6 +14,7 @@ class TournamentView:
         self.tournament_player_number = "tournament_player_number"
         self.tournament_max_turn = "tournament_max_turn"
         self.tournament_play_style = "tournament_play_style"
+        self.player = PlayerView
 
     def get_new_tournament_information(self):
         while True:
@@ -28,6 +30,11 @@ class TournamentView:
                     self.tournament_end_date,  self.tournament_player_number, self.tournament_max_turn,
                     self.tournament_play_style)
 
+
+
+
+
+
     def choose_option_tournament(self):
         while True:
             choice = input('''
@@ -35,7 +42,7 @@ Welcome to the Tournament Menu
 1: Create Tournament
 2: Select options Tournament
 3: Select modification Tournament
-4: Return to the main menu
+4: Return to the Main Menu
 >> choose you're options >>''')
 
             return choice
@@ -61,9 +68,10 @@ Welcome to the Player Selecter modification Menu
 >> choose you're options >>''')
         return choice
 
-    # def load_tournament(self):
-    #     tournament_id = input("What is the id of the tournament would you load? : ")
-    #     return tournament_id
+    def select_create_tournament(self):
+        TournamentView = input("You are going to create a new tournament")
+        return TournamentView
+
 
     def select_data_tournament_by_id(self):
         tournament_id = input("What is the id of the tournament? : ")

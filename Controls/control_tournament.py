@@ -1,5 +1,6 @@
 from Views.tournament_viewer import TournamentView
-from Views.home_menu_view import HomeMenuView
+from Views.player_viewer import PlayerView
+from Controls.home_menu_control import HomeMenuControl
 from Data_base import db
 
 
@@ -8,6 +9,9 @@ class TournamentControl:
     def __init__(self):
         self.tournament_menu = TournamentMenu()
         self.view = TournamentView(self.tournament_menu)
+        self.player = PlayerView
+        self.home_menu = HomeMenuControl()
+
 
     def __call__(self):
         print("{Tournament Management}")
@@ -22,6 +26,9 @@ class TournamentControl:
             # Add one player
             param = self.view.add_player_into_tournament()
             db.add_player_into_tournament(param['player_id'], param['tournament_id'])
+
+            print("{°°°Tournament is created with succes°°°}")
+            self.view.choose_option_tournament()
 
             # Add multiple players
             #players = db.select_all_players()
@@ -49,8 +56,6 @@ class TournamentControl:
                 matchs_tournament = self.view.consult_matchs_tournament()
                 db.consult_matchs_tournament(matchs_tournament)
 
-            if choice_select == "4":
-                home_menu = self.view.menu_display(HomeMenuView)
 
         # select modification tournament
         if choice == "3":
@@ -68,6 +73,10 @@ class TournamentControl:
                 tournament_id = self.view.erase_tournament_by_id()
                 db.erase_data_tournament_by_id(tournament_id)
                 print(tournament_id)
+
+        if choice == "4":
+
+            self.home_menu_control = self.home_menu()
 
 
 class TournamentMenuInput:
