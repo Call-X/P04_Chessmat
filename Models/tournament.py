@@ -5,7 +5,7 @@ class Tournament(object):
     players_table = DataBaseService
     connexion = None
 
-    def __init__(self, tournament_name = None, tournament_location = None, tournament_start_date =None,
+    def __init__(self, tournament_name=None, tournament_location=None, tournament_start_date=None,
                  tournament_end_date=None, tournament_player_number=None, tournament_max_turn=None,
                  tournament_play_style=None):
 

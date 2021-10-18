@@ -30,11 +30,6 @@ class TournamentView:
                     self.tournament_end_date,  self.tournament_player_number, self.tournament_max_turn,
                     self.tournament_play_style)
 
-
-
-
-
-
     def choose_option_tournament(self):
         while True:
             choice = input('''
@@ -51,9 +46,10 @@ Welcome to the Tournament Menu
         choice = input('''
 Welcome to the Tournament Selecter Menu
 1: Select Tournament by id
-2: Consult Player's Tournament
-3: Consult match's Tournament
-4: quit
+2: Select All Tournament
+3: Consult Player's Tournament
+4: Consult match's Tournament
+5: Return to the Home Menu
 
 >> choose you're options >>''')
         return choice
@@ -63,7 +59,7 @@ Welcome to the Tournament Selecter Menu
 Welcome to the Player Selecter modification Menu
 1: Update tournament by id
 2: Erase tournament by id
-5: Quit
+3: Return to the Home Menu
 
 >> choose you're options >>''')
         return choice
@@ -76,12 +72,6 @@ Welcome to the Player Selecter modification Menu
     def select_data_tournament_by_id(self):
         tournament_id = input("What is the id of the tournament? : ")
         return tournament_id
-
-    def consult_players_tournament(self):
-        pass
-
-    def consult_matchs_tournament(self):
-        pass
 
     def update_tournament(self):
         tournament_name = input("Enter the name of this tournament: ")

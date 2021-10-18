@@ -63,7 +63,18 @@ class DataBaseService(metaclass=SingletonMeta):
     def select_data_tournament_by_id(self, tournament_id):
         cur = self.connexion.cursor()
         cur.execute('SELECT * FROM tournaments WHERE id=?', (tournament_id,))
-        return cur.fetchone()
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
+
+    def select_all_tournament(self):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM tournaments')
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
 
 
     def update_tournament(self, tournament_name, tournament_location, tournament_start_date, tournament_end_date,
@@ -73,29 +84,37 @@ class DataBaseService(metaclass=SingletonMeta):
                     (tournament_name, tournament_location, tournament_start_date, tournament_end_date,
                      tournament_player_number, tournament_max_turn, tournament_play_style, id))
         self.connexion.commit()
-        print("Tournament updated!")
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
+    print("Tournament updated!")
 
     def erase_data_tournament_by_id(self, tournament_id):
         cur = self.connexion.cursor()
         cur.execute('DELETE FROM tournaments WHERE id=?', (tournament_id,))
         self.connexion.commit()
-        print("Tournament deleted!")
-        return cur.fetchone()
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
+    print("Tournament deleted!")
+
 
     '''players'''
     def player_list(self):
         cur = self.connexion.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS players(
-        id.integer PRIMARY KEY,       
+        id.integer PRIMARY KEY,             
         familly_name TEXT,
         first_name TEXT,
         rank INTEGER;''')
 
     def insert_data_player(self, player):
-        player = [(player.first_name, player.familly_name, player.rank)]
+        player = [(player.player_id, player.familly_name, player.first_name, player.rank)]
 
         cur = self.connexion.cursor()
-        cur.executemany('''INSERT INTO players (familly_name, first_name, rank) VALUES ( ?, ?, ? )''', player)
+        cur.executemany('''INSERT INTO players (id, familly_name, first_name, rank) VALUES ( ?, ?, ?, ? )''', player)
         self.connexion.commit()
 
         return cur.lastrowid
@@ -106,7 +125,7 @@ class DataBaseService(metaclass=SingletonMeta):
         cur.execute('SELECT * FROM players')
         rows = cur.fetchall()
         for row in rows:
-            print(row)
+            print(f' Player id, player familly name, player first name, player rank : \n {row}')
         return rows
 
     def select_data_player_order_by_rank(self):
@@ -114,25 +133,35 @@ class DataBaseService(metaclass=SingletonMeta):
         cur.execute('SELECT * FROM players ORDER BY rank')
         rows = cur.fetchall()
         for row in rows:
-            print(row)
+            print(f' player id , player familly name, player first name, rank : \n {row}')
         return rows
 
     def select_data_player_by_name(self, familly_name):
         cur = self.connexion.cursor()
-        cur.execute('SELECT * FROM players WHERE familly=?', (familly_name,))
-        return cur.fetchall()
+        cur.execute('SELECT * FROM players WHERE familly_name=?', (familly_name,))
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
 
     def select_data_player_by_id(self, player_id):
         cur = self.connexion.cursor()
         cur.execute('SELECT * FROM players WHERE id=?', (player_id,))
-        return cur.fetchone()
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
 
     def erase_player_by_id(self, player_id):
         cur = self.connexion.cursor()
         cur.execute('DELETE FROM players WHERE id=?', (player_id,))
         self.connexion.commit()
-        print("Player deleted!")
-        return cur.fetchone()
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
+    print("Player deleted!")
+
 
     def update_player(self, familly_name, first_name, rank, id):
         cur = self.connexion.cursor()
@@ -151,7 +180,6 @@ class DataBaseService(metaclass=SingletonMeta):
         FOREIGN KEY(player_id) REFERENCES player(id),
         FOREIGN KEY(tournament_id) REFERENCES tournament(id);''')
 
-
     def add_player_into_tournament(self, player_id, tournament_id):
         param = [(player_id, tournament_id)]
         cur = self.connexion.cursor()
@@ -159,48 +187,61 @@ class DataBaseService(metaclass=SingletonMeta):
         self.connexion.commit()
         return cur.lastrowid
 
-
-
-
-    # def insert_player_registered_in_tournament(self, player_id):
-    #
-    #     cur = self.connexion.cursor()
-    #     cur.executemany('''INSERT INTO players_in_tournament (player_id) VALUES ( ? )''', player_id)
-    #     self.connexion.commit()
-    #
-    #     return cur.lastrowid
-    #
-    # def insert_tournament_contain_player(self, tournament_id):
-    #
-    #     cur = self.connexion.cursor()
-    #     cur.executemany('''INSERT INTO players_in_tournament (tournament_id) VALUES ( ? )''', tournament_id)
-    #     self.connexion.commit()
-    #
-    #     return cur.lastrowid
+    def select_all_players_in_tournament(self):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM players_in_tournament')
+        rows = cur.fetchall()
+        for row in rows:
+            print(f'id, Player id, Tournament id: \n {row}')
+        return rows
 
     def select_player_registered_by_id(self, player_id):
         cur = self.connexion.cursor()
         cur.execute('SELECT * FROM players_in_tournament WHERE id=?', (player_id,))
-        return cur.fetchone()
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
+
 
     def select_tournament_contain_player_by_id(self, tournament_id):
         cur = self.connexion.cursor()
         cur.execute('SELECT * FROM players_in_tournament WHERE id=?', (tournament_id,))
-        return cur.fetchone()
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
 
     def erase_player_registered_by_id(self, player_id):
         cur = self.connexion.cursor()
         cur.execute('DELETE FROM players_in_tournament WHERE id=?', (player_id,))
         self.connexion.commit()
         print("Player deleted!")
-        return cur.fetchone()
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
 
     def erase_tournament_contain_player_by_id(self, tournament_id):
         cur = self.connexion.cursor()
         cur.execute('DELETE FROM players_in_tournament WHERE id=?', (tournament_id,))
         self.connexion.commit()
         print("Tournament deleted!")
-        return cur.fetchone()
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+        return rows
+
+    '''table player order by rank'''
+    def player_order_by_rank(self):
+        cur = self.connexion.cursor()
+        cur.execute('''CREATE TABLE Player in tournament order by rank AS request(
+        id.integer PRIMARY KEY,
+        player_id INTEGER,
+        tournament_id INTEGER,
+        FOREIGN KEY(player_id) REFERENCES player(id),
+        FOREIGN KEY(tournament_id) REFERENCES tournament(id);''')
+
 
     def close(self):
         if self.connexion:
