@@ -1,7 +1,9 @@
 from Views.tournament_viewer import TournamentView
 from Views.player_viewer import PlayerView
 from Controls.home_menu_control import HomeMenuControl
-from Models.match import Match
+# from Models.match import Match
+# from Models.tournament import Tournament
+from Models.round import Round
 from Data_base import db
 
 
@@ -12,7 +14,7 @@ class TournamentControl:
         self.view = TournamentView(self.tournament_menu)
         self.player = PlayerView
         self.home_menu = HomeMenuControl()
-        self.total_number_players = []
+
 
 
     def __call__(self):
@@ -33,10 +35,10 @@ class TournamentControl:
             choice = self.view.choose_option_tournament()
 
             # Add multiple players
-            #players = db.select_all_players()
-            #players_selected_ids = self.view.add_players_into_tournament(players)
-            #for player_id in players_selected_ids:
-            #    db.add
+            players = db.select_all_players()
+            players_selected_ids = self.view.add_players_into_tournament(players)
+            for player_id in players_selected_ids:
+               db.add
 
 
         # Select Tournament
@@ -92,16 +94,28 @@ class TournamentControl:
 
             self.home_menu_control = self.home_menu()
 
-    def player_matchs(self, player):
-        i = 1
-        self.total_number_players = len(db.select_player_order_by_rank())
-        while i <= self.total_number_players/2:
-            Match(player[i], player[i + (self.total_number_players/2)])
+    # def create_pair(self):
+    #     db.player_list()
+    #     if len(rounds.Round) == 0:
+
+
+    # def generate_match(self, player):
+    #     numbers_of_players = len(self.players.Tournament)
+    #     self.player_list = Tournament
+    #     i = 1
+    #     while i <= int(self.player_list[Tournament])/2:
+    #         Match(player[i], player[i + (self.player_list/2)])
+
+
+    def generate_round(self):
+        pass
+
 
 class TournamentMenuInput:
     def __init__(self, option, handler):
         self.option = option
         self.handler = handler
+
 
 class TournamentMenu:
     def __init__(self):

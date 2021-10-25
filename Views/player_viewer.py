@@ -13,11 +13,11 @@ class PlayerView:
 
     def get_new_player(self):
         while True:
-            self.player_id = input("player id : ")
+            # self.player_id = input("player id : ")
             self.familly_name = input("Enter the familly name player : ").capitalize()
             self.first_name = input("Enter the fisrt name player: ").capitalize()
             self.rank = input("Player Rank : ")
-            return Player(self.player_id, self.familly_name, self.first_name, self.rank)
+            return Player(0, self.familly_name, self.first_name, self.rank)
 
     def choose_option_player(self):
         while True:

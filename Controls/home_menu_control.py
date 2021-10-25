@@ -2,8 +2,6 @@ from Views.home_menu_view import HomeMenuView
 from Views.tournament_viewer import TournamentView
 
 
-
-
 class HomeMenuControl:
     def __init__(self):
 
@@ -47,7 +45,7 @@ class HomeMenu:
         if key == "auto":
             key = str(self.autokey)
             self.autokey += 1
-        self._entries[ str(key) ] = HomeMenuInput(option, handler)
+        self._entries[str(key)] = HomeMenuInput(option, handler)
 
     def object(self):
         return self._entries.items()
@@ -56,20 +54,6 @@ class HomeMenu:
         return str(choice) in self._entries
 
     def __getitem__(self, choice):
-        return self._entries[ choice ]
+        return self._entries[choice]
 
-
-
-# #construction du menu
-        # self.menu._add_menu("auto", "Tounament Management", TournamentControl()),"\n"
-        # self.menu._add_menu("auto", "Player Management", PlayerControl()), "\n"
-        # self.menu._add_menu("auto", "Minority menu ", MinorityReportMenuControl()), "\n"
-        # self.menu._add_menu("auto", "Sub-report menu", SubReportMenuControl()), "\n"
-        # self.menu._add_menu("auto", "Quit", ScreenControl()), "\n"
-        #
-        # #demander a la vue d'afficher le menu et collecter la réponse de 'lutilisateur
-        # user_choice = self.view.get_user_choice()
-        #
-        # #retrouner le controller associé au choix de  l'utilisateur au controller principal
-        # return user_choice.handler
 

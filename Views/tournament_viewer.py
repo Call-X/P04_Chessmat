@@ -64,6 +64,30 @@ Welcome to the Player Selecter modification Menu
 >> choose you're options >>''')
         return choice
 
+    def display_all_tournaments_and_choose_one(self, gb_tournaments):
+        print("\n\n")
+        print("---- LIST OF TOURNAMENT ----")
+        for id, tournament in gb_tournaments.items():
+            print(str(id) + ": " + tournament.name + " | " + tournament.location +
+                  " | nombre de joueur: " + str(len(tournament.players)))
+        print("\n\n")
+        choice = input(">> Enter the tournament id to add a player >>")
+        return choice
+
+    def display_all_players_and_choose_one(self, gb_players, tournament):
+        print("\n\n")
+        print("---- LIST OF PLAYERS ----")
+        for id, player in gb_players.items():
+            print(str(id) + ": " + player.first_name + " | " +
+                  player.family_name + " | " + str(player.rank))
+            if id in tournament.gb_players:
+                print("  ---- DEJA INSCRIT ")
+        print("\n\n")
+        choice = input(
+            ">> Enter the player id to add it to the selected tournament >>")
+        return choice
+
+
     def select_create_tournament(self):
         TournamentView = input("You are going to create a new tournament")
         return TournamentView
@@ -102,6 +126,20 @@ Welcome to the Player Selecter modification Menu
             print(player.id + " " + player.first_name + " " + player.familly_name)
         player_ids = input("Enter id of each player you want to registered for this tournament (separated with coma \",\") ")
         return player_ids
+
+    def get_round(self):
+        name_of_the_round = input("Enter the name of the round :  ")
+        tournament_id = input("Enter the id of the tournament : ")
+        return {'name_of_the_round': name_of_the_round, 'tournament_id': tournament_id}
+
+    def get_match_into_tournament(self):
+        tournament_id = input("Enter the id of the tournament : ")
+        round_number = input("Enter the number of the round : ")
+        player1_rank = input("Enter the rank of the player n°1 : ")
+        player2_rank = input("Enter the rank of the player n°2 : ")
+        score = input('f player n°1 : {player1_score} - player n°2 : {player2_score}')
+        return {'tournament_id': tournament_id, 'round_numer': round_number, 'player1_rank': player1_rank,
+                'player2_rank': player2_rank, 'score': score}
 
 
 

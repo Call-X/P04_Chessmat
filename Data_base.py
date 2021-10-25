@@ -1,5 +1,7 @@
 import sqlite3
 from sqlite3 import Error
+from Models.tournament import Tournament
+from Models.player import Player
 
 
 
@@ -25,17 +27,74 @@ class SingletonMeta(type):
 
 
 class DataBaseService(metaclass=SingletonMeta):
-    connexion = None
 
     def __init__(self):
+
+        self.gb_players = {}
+        self.gb_tournaments = {}
         try:
             self.connexion = sqlite3.connect("chessmat.db")
-            print("CONNECTION SUCCEED. SQL LITE VERSION " + sqlite3.version)
+            self.connexion.execute("PRAGMA foreign_keys = 1")
+            # print("CONNECTION SUCCEED. SQL LITE VERSION " + sqlite3.version)
         except Error as e:
             print(e)
 
+    # - # Création du bloc de fonction pour charger la base de donnée dès l'ouverture du jeu
+
+    ''' Function services '''
+
+    def load(self):
+        # create all table when program is laucnh
+        self.create_all_tables_db()
+
+        # Load all the players
+        # [[1, Emile, Miath, 3],[2, Kevin, Bogo, 5]]...
+        players = self.select_all_players()
+        # if find players
+        if len(players) > 0:
+            for p in players:
+                player = Player(*p)  # Player(1, Emile, Miath, 3)
+                # for example : emile = players[1]
+                #creation de l'objet player dans ma variable globale
+                self.gb_players[player.id] = player
+
+
+        # Load all the tournaments
+        tournaments = self.select_all_tournament()
+        if len(tournaments) > 0:
+            for t in tournaments:
+                tournament = Tournament(*t)
+                self.gb_tournaments[tournament.id] = tournament
+
+        # Select all tournaments where the player is registered
+        # items() permet de parcourir les dictionnaire dans une boucle for
+        for id, player in self.gb_players.items():
+            rows = self.select_all_tournaments_from_one_player(
+                player.id)
+            # Si il y a des resultats (ici des tournois)
+            if len(rows) > 0:
+                for row in rows:
+                    tournament_id = row[2]
+                    self.gb_players[id].gb_tournaments[tournament_id] = self.gb_tournaments[tournament_id]
+
+        # Select all players from one tournament
+        for id, tournament in self.gb_tournaments.items():
+            rows = self.select_all_players_for_one_tournament(
+                tournament.id)
+            if len(rows) > 0:
+                for row in rows:
+                    player_id = row[1]
+                    self.gb_tournaments[id].players[player_id] = self.gb_players[player_id]
+
+    def create_all_tables_db(self):
+        self.create_table_tournament()
+        self.create_table_player()
+        self.create_table_player_in_tournament()
+        self.create_table_round()
+        self.create_table_match()
+
     '''Tournament'''
-    def tournament_list(self):
+    def create_table_tournament(self):
         cur = self.connexion.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS tournaments(
                 id.integer PRIMARY KEY,       
@@ -88,7 +147,7 @@ class DataBaseService(metaclass=SingletonMeta):
         for row in rows:
             print(row)
         return rows
-    print("Tournament updated!")
+    # print("Tournament updated!")
 
     def erase_data_tournament_by_id(self, tournament_id):
         cur = self.connexion.cursor()
@@ -98,11 +157,11 @@ class DataBaseService(metaclass=SingletonMeta):
         for row in rows:
             print(row)
         return rows
-    print("Tournament deleted!")
+    # print("Tournament deleted!")
 
 
     '''players'''
-    def player_list(self):
+    def create_table_player(self):
         cur = self.connexion.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS players(
         id.integer PRIMARY KEY,             
@@ -160,7 +219,7 @@ class DataBaseService(metaclass=SingletonMeta):
         for row in rows:
             print(row)
         return rows
-    print("Player deleted!")
+    # print("Player deleted!")
 
 
     def update_player(self, familly_name, first_name, rank, id):
@@ -171,7 +230,7 @@ class DataBaseService(metaclass=SingletonMeta):
         print("Player updated!")
 
     '''table players in tournament'''
-    def player_registered_in_tournament(self):
+    def create_table_player_in_tournament(self):
         cur = self.connexion.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS players_in_tournament(
         id.integer PRIMARY KEY,
@@ -187,12 +246,34 @@ class DataBaseService(metaclass=SingletonMeta):
         self.connexion.commit()
         return cur.lastrowid
 
+    def is_player_is_registered(self, player_id, tournament_id):
+        cur = self.connexion.cursor()
+        cur.execute(
+            'SELECT * FROM players_in_tournament WHERE tournament_id=? AND player_id=?', (tournament_id, player_id))
+        rows = cur.fetchall()
+
+        return rows
+
     def select_all_players_in_tournament(self):
         cur = self.connexion.cursor()
         cur.execute('SELECT * FROM players_in_tournament')
         rows = cur.fetchall()
         for row in rows:
             print(f'id, Player id, Tournament id: \n {row}')
+        return rows
+
+    def select_all_tournaments_from_one_player(self, player_id):
+        cur = self.connexion.cursor()
+        cur.execute(
+            'SELECT * FROM players_in_tournament WHERE player_id=?', (player_id,))
+        rows = cur.fetchall()
+        return rows
+
+    def select_all_players_for_one_tournament(self, tournament_id):
+        cur = self.connexion.cursor()
+        cur.execute(
+            'SELECT * FROM players_in_tournament WHERE id=?', (tournament_id,))
+        rows = cur.fetchall()
         return rows
 
     def select_player_registered_by_id(self, player_id):
@@ -232,15 +313,26 @@ class DataBaseService(metaclass=SingletonMeta):
             print(row)
         return rows
 
-    '''table player order by rank'''
-    def player_order_by_rank(self):
+    '''match'''
+    def create_table_match(self):
         cur = self.connexion.cursor()
-        cur.execute('''CREATE TABLE Player in tournament order by rank AS request(
+        cur.execute('''CREATE TABLE IF NOT EXISTS matchs_in_tournament(
         id.integer PRIMARY KEY,
-        player_id INTEGER,
         tournament_id INTEGER,
-        FOREIGN KEY(player_id) REFERENCES player(id),
+        FOREIGN KEY(player_id_1) REFERENCES player(id),
+        FOREIGN KEY(player_id_2) REFERENCES player(id),
         FOREIGN KEY(tournament_id) REFERENCES tournament(id);''')
+
+    '''round'''
+    def create_table_round(self):
+        cur = self.connexion.cursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS rounds_in_tournament(
+        id.integer PRIMARY KEY,
+        name TEXT,
+        number INTEGER,
+        FOREIGN KEY(tournament_id) REFERENCES tournament(id);''')
+
+
 
 
     def close(self):

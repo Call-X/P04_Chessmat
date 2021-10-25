@@ -1,4 +1,5 @@
 from Views.player_viewer import PlayerView
+from Controls.home_menu_control import HomeMenuControl
 from Data_base import db
 
 
@@ -6,6 +7,7 @@ class PlayerControl:
     def __init__(self):
         self.player_menu = PlayerMenu()
         self.view = PlayerView(self.player_menu)
+        self.home_menu = HomeMenuControl()
 
     def __call__(self):
         print("~~~ Player Management ~~~ ")
@@ -16,6 +18,7 @@ class PlayerControl:
         if choice == "1":
             player = self.view.get_new_player()
             db.insert_data_player(player)
+            choice = self.home_menu_control = self.home_menu()
 
         # Select Player
         if choice == "2":
@@ -23,21 +26,31 @@ class PlayerControl:
 
             if choice_select == "1":
                 name = self.view.select_players_by_name()
-                players = db.select_data_player_by_name(name)
-                for player in players:
-                    print(player)
+                db.select_data_player_by_name(name)
+                choice = self.home_menu_control = self.home_menu()
+
 
             if choice_select == "2":
                 rank = self.view.select_players_by_rank()
-                players = db.select_data_player_order_by_rank(rank)
-                for player in players:
-                    print(player)
+                db.select_data_player_order_by_rank(rank)
+                choice = self.home_menu_control = self.home_menu()
+
 
             if choice_select == "3":
                 player_id = self.view.select_players_by_id()
-                players = db.select_data_player_by_id(player_id)
-                for player in players:
-                    print(player)
+                db.select_data_player_by_id(player_id)
+                choice = self.home_menu_control = self.home_menu()
+
+            if choice_select == "4":
+                db.select_data_player_order_by_rank()
+                choice = self.home_menu_control = self.home_menu()
+
+            if choice_select == "5":
+                db.select_all_players()
+                choice = self.home_menu_control = self.home_menu()
+
+            if choice_select == "6":
+                choice = self.home_menu_control = self.home_menu()
 
 
         # select modification players
@@ -48,15 +61,19 @@ class PlayerControl:
                 player = self.view.update_player()
                 db.update_player(player['familly_name'], player['first_name'], player['rank'], player['id'])
                 print(player)
+                choice = self.home_menu_control = self.home_menu()
 
             if choice_select == "2":
                 player_id = self.view.erase_player_by_id()
                 db.erase_player_by_id(player_id)
                 print(player_id)
+                choice = self.home_menu_control = self.home_menu()
 
+            if choice == "3":
+                self.home_menu_control = self.home_menu()
 
-    def select_all_players(self):
-        db.select_all_players()
+            if choice == "4":
+                self.home_menu_control = self.home_menu()
 
 
 class PlayerMenuInput:
