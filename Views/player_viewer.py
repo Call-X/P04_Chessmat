@@ -1,6 +1,7 @@
 from Models.player import Player
 
 
+
 class PlayerView:
     input = {}
 
@@ -34,12 +35,9 @@ Welcome to the Player Menu
     def select_options_players(self):
         choice = input('''
 Welcome to the Player Selecter Menu
-1: Select player by name
-2: Select player by rank
-3: Select player by id
-4: Select Player order by rank
-5: Select all players
-6: Return to the Main Menu
+
+1: Select player by rank
+2: Return to the Main Menu
 
  
 >> choose you're options >>''')
@@ -49,27 +47,18 @@ Welcome to the Player Selecter Menu
         choice = input('''
 Welcome to the Player Selecter modification Menu
 1: Update player
-2: Erase player
 3: Return to the Main Menu
 
 >> choose you're options >>''')
         return choice
 
-    def select_players_by_name(self):
-        player_familly_name = input("What is the familly name of the player(s)? : ")
-        return player_familly_name
-
     def select_players_by_rank(self):
         player_rank = input("What is the rank of the player(s)? : ")
         return player_rank
 
-    def select_players_by_id(self):
-        player_id = input("What is the id of the player(s)? : ")
-        return player_id
-
-    def erase_player_by_id(self):
-        player_id = input("What is the id of the player(s) you want to erase? : ")
-        return player_id
+    def erase_player_by_rank(self):
+        player_rank = input("What is the rank of the player(s) you want to erase? : ")
+        return player_rank
 
     def update_player(self):
         player_familly_name = input("What is the familly name of the player(s) you want to update? : ")
@@ -78,5 +67,22 @@ Welcome to the Player Selecter modification Menu
         player_id = input("What is the id of the player(s) you want to update? : ")
         return {'familly_name': player_familly_name, 'first_name': player_first_name, 'rank': player_rank,
                 'id': player_id}
+
+    # def display_all_players_and_choose_one(self, players, tournament):
+    #     print("\n\n")
+    #     print("---- LIST OF PLAYERS ----")
+    #     for id, player in players.items():
+    #         print(str(id) + ": " + player.first_name + " | " +
+    #               player.familly_name + " | " + str(player.rank))
+    #         if id in tournament.players:
+    #         # print(db.gb_players)
+    #         # print(tournament)
+    #         # if id in db.gb_players:
+    #             print("  ---- DEJA INSCRIT ")
+    #     print("\n\n")
+    #     choice = input(
+    #         ">> Enter the player id to add it to the selected tournament >>")
+    #     return choice
+
 
 

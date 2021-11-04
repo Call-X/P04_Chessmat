@@ -1,12 +1,8 @@
-
 class Round:
-    match_list = []
 
-    def __init__(self, name=None, number_of_round=None, round_start_time=None):
+    def __init__(self, round_number=None, round_start_time=None):
 
-        self.name = name
-        self.matchs = []
-        self.number_of_round = number_of_round
+        self.round_number = round_number
         self.round_start_time = round_start_time
         self.round_end_time = None
 

@@ -1,6 +1,3 @@
-
-
-
 class Player(object):
 
     connexion = None
@@ -13,7 +10,6 @@ class Player(object):
 
         # All tournaments which player is resgistered
         self.tournaments = {}
-
 
 
 

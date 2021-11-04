@@ -3,18 +3,27 @@ class Tournament(object):
 
     connexion = None
 
-    def __init__(self, id=0, tournament_name=None, tournament_location=None, tournament_start_date=None,
-                 tournament_end_date=None, rounds=None, tournament_play_style=None):
+    def __init__(self, id=0, name=None, location=None, start_date=None,
+                 end_date=None, max_turn=None, play_style=None):
         self.id = id
-        self.tournament_name = tournament_name
-        self.tournament_location = tournament_location
-        self.tournament_start_date = tournament_start_date
-        self.tournament_end_date = tournament_end_date
-        self.rounds = rounds
-        self.tournament_play_style = tournament_play_style
+        self.name = name
+        self.location = location
+        self.start_date = start_date
+        self.end_date = end_date
+        self.max_turn = max_turn
+        # self.tournament_player_number = tournament_player_number
+        # self.rounds = rounds
+        self.play_style = play_style
 
         # All players registered for the tournament
         self.players = {}
+
+        # All matchs for the tournament
+        self.matchs = {}
+
+        # All rounds for the tournament
+        self.rounds = {}
+
 
 
 

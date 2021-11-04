@@ -2,6 +2,8 @@ from Models.tournament import Tournament
 from Views.player_viewer import PlayerView
 
 
+
+
 class TournamentView:
     input = {}
 
@@ -22,13 +24,12 @@ class TournamentView:
             self.tournament_location = input("enter the localisaiton of this Tournament: ")
             self.tournament_start_date = input("Enter the start date of this Tournament (DD/MM/YYYY) : ")
             self.tournament_end_date = input("Enter the end date of this tournament (DD/MM/YYYY) : ")
-            self.tournament_player_number = input("Enter the number of player : ")
-            self.tournament_max_turn = input("Enter the number of turn : ")
+            # self.tournament_player_number = input("Enter the number of player : ")
+            # self.tournament_max_turn = input("Enter the number of turn : ")
             self.tournament_play_style = input("Enter the gamestyle of this Tournament (bullet / blitz / rush) : ")
 
             return Tournament(self.tournament_name, self.tournament_location, self.tournament_start_date,
-                    self.tournament_end_date,  self.tournament_player_number, self.tournament_max_turn,
-                    self.tournament_play_style)
+                    self.tournament_end_date, self.tournament_play_style)
 
     def choose_option_tournament(self):
         while True:
@@ -36,8 +37,8 @@ class TournamentView:
 Welcome to the Tournament Menu
 1: Create Tournament
 2: Select options Tournament
-3: Select modification Tournament
-4: Return to the Main Menu
+3: Return to the Main Menu
+4: Launch a Tournament
 >> choose you're options >>''')
 
             return choice
@@ -45,21 +46,10 @@ Welcome to the Tournament Menu
     def select_options_tournament(self):
         choice = input('''
 Welcome to the Tournament Selecter Menu
-1: Select Tournament by id
-2: Select All Tournament
-3: Consult Player's Tournament
-4: Consult match's Tournament
-5: Return to the Home Menu
-
->> choose you're options >>''')
-        return choice
-
-    def select_modification_tournament(self):
-        choice = input('''
-Welcome to the Player Selecter modification Menu
-1: Update tournament by id
-2: Erase tournament by id
-3: Return to the Home Menu
+1: Select All Tournament and choose one
+2: Select All Player and choose one
+3: Launch a Tournament
+4: Return to the Home Menu
 
 >> choose you're options >>''')
         return choice
@@ -74,13 +64,23 @@ Welcome to the Player Selecter modification Menu
         choice = input(">> Enter the tournament id to add a player >>")
         return choice
 
-    def display_all_players_and_choose_one(self, gb_players, tournament):
+    def display_all_informations_for_one_tournament(self, tournament):
+        print("\n")
+        print("°°° TOURNAMENT INFORMATIONS °°°")
+        print("\n")
+        print(tournament.name + '|' + tournament.location + '|' + str(tournament.start_date)
+              + '|' + str(tournament.end_date) + '|' + tournament.play_style + '|'
+              + '|' + str(tournament.max_turn))
+        for id, player in tournament.players.items():
+            print(player.familly_name)
+
+    def display_all_players_and_choose_one(self, players, tournament):
         print("\n\n")
         print("---- LIST OF PLAYERS ----")
-        for id, player in gb_players.items():
+        for id, player in players.items():
             print(str(id) + ": " + player.first_name + " | " +
-                  player.family_name + " | " + str(player.rank))
-            if id in tournament.gb_players:
+                  player.familly_name + " | #" + str(player.rank))
+            if id in tournament.players:
                 print("  ---- DEJA INSCRIT ")
         print("\n\n")
         choice = input(
@@ -88,44 +88,9 @@ Welcome to the Player Selecter modification Menu
         return choice
 
 
-    def select_create_tournament(self):
-        TournamentView = input("You are going to create a new tournament")
-        return TournamentView
-
-
-    def select_data_tournament_by_id(self):
-        tournament_id = input("What is the id of the tournament? : ")
-        return tournament_id
-
-    def update_tournament(self):
-        tournament_name = input("Enter the name of this tournament: ")
-        tournament_location = input("enter the localisaiton of this Tournament: ")
-        tournament_start_date = input("Enter the start date of this Tournament (DD/MM/YYYY) : ")
-        tournament_end_date = input("Enter the end date of this tournament (DD/MM/YYYY) : ")
-        tournament_player_number = input("Enter the number of player : ")
-        tournament_max_turn = input("Enter the number of turn : ")
-        tournament_play_style = input("Enter the gamestyle of this Tournament (bullet / blitz / rush) : ")
-        tournament_id = input("Enter the id of this Tournament : ")
-        return {'tournament_name': tournament_name, 'tournament_location': tournament_location,
-                'tournament_start_date': tournament_start_date, 'tournament_end_date': tournament_end_date,
-                'tournament_player_number': tournament_player_number, 'tournament_max_turn': tournament_max_turn,
-                'tournament_play_style': tournament_play_style, 'tournament_id': tournament_id}
-
     def erase_tournament_by_id(self):
         tournament_id = input("What is the id of the tournament you want to erase? : ")
         return tournament_id
-
-    def add_player_into_tournament(self):
-        player_id = input("Enter the id of the player to registered: ")
-        tournament_id = input("Enter the id of the tournament:")
-
-        return {'player_id': player_id, 'tournament_id': tournament_id}
-
-    def add_players_into_tournament(self, players):
-        for player in players:
-            print(player.id + " " + player.first_name + " " + player.familly_name)
-        player_ids = input("Enter id of each player you want to registered for this tournament (separated with coma \",\") ")
-        return player_ids
 
     def get_round(self):
         name_of_the_round = input("Enter the name of the round :  ")
@@ -138,8 +103,35 @@ Welcome to the Player Selecter modification Menu
         player1_rank = input("Enter the rank of the player n°1 : ")
         player2_rank = input("Enter the rank of the player n°2 : ")
         score = input('f player n°1 : {player1_score} - player n°2 : {player2_score}')
-        return {'tournament_id': tournament_id, 'round_numer': round_number, 'player1_rank': player1_rank,
+        return {'tournament_id': tournament_id, 'round_number': round_number, 'player1_rank': player1_rank,
                 'player2_rank': player2_rank, 'score': score}
+
+    # def display_launch_tournament(self):
+    #     tournament = self.display_all_tournaments_and_choose_one(gb_tournaments)
+    #     try:
+    #         matches, tournament = launch_tournament()
+    #         chess_round = self.tournament.handle_match(matches, tournament)
+    #         self.handle_match_scores(chess_round, tournament)
+    #
+    #     except TypeError:
+    #         pass
+
+    def display_round_results(self, games):
+        for result in games:
+            if result[0][1] == 1:
+                print(
+                    result[0][0].player.familly_name + ' | ' + result[0][0].player.first_name + ' VICTORY')
+            elif result[0][1] == 0.5:
+                print(result[0][0].player.familly_name + ' | ' + result[0][0].player.first_name + ', '
+                      + result[1][0].player.familly_name + ' | ' + result[1][0].player.first_name + ' EQUALITY')
+            else:
+                print(
+                    result[1][0].player.familly_name + ' | ' + result[1][0].player.first_name + ' VICTORY')
+
+        print("\n Insert a coin to continue")
+        input()
+        return None
+
 
 
 

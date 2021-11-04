@@ -8,6 +8,9 @@ class PlayerControl:
         self.player_menu = PlayerMenu()
         self.view = PlayerView(self.player_menu)
         self.home_menu = HomeMenuControl()
+        self.DataBaseService = db
+
+
 
     def __call__(self):
         print("~~~ Player Management ~~~ ")
@@ -25,31 +28,13 @@ class PlayerControl:
             choice_select = self.view.select_options_players()
 
             if choice_select == "1":
-                name = self.view.select_players_by_name()
-                db.select_data_player_by_name(name)
-                choice = self.home_menu_control = self.home_menu()
-
-
-            if choice_select == "2":
                 rank = self.view.select_players_by_rank()
                 db.select_data_player_order_by_rank(rank)
                 choice = self.home_menu_control = self.home_menu()
 
 
+
             if choice_select == "3":
-                player_id = self.view.select_players_by_id()
-                db.select_data_player_by_id(player_id)
-                choice = self.home_menu_control = self.home_menu()
-
-            if choice_select == "4":
-                db.select_data_player_order_by_rank()
-                choice = self.home_menu_control = self.home_menu()
-
-            if choice_select == "5":
-                db.select_all_players()
-                choice = self.home_menu_control = self.home_menu()
-
-            if choice_select == "6":
                 choice = self.home_menu_control = self.home_menu()
 
 
@@ -60,19 +45,10 @@ class PlayerControl:
             if choice_select == "1":
                 player = self.view.update_player()
                 db.update_player(player['familly_name'], player['first_name'], player['rank'], player['id'])
-                print(player)
+
                 choice = self.home_menu_control = self.home_menu()
 
-            if choice_select == "2":
-                player_id = self.view.erase_player_by_id()
-                db.erase_player_by_id(player_id)
-                print(player_id)
-                choice = self.home_menu_control = self.home_menu()
-
-            if choice == "3":
-                self.home_menu_control = self.home_menu()
-
-            if choice == "4":
+            if choice == "2":
                 self.home_menu_control = self.home_menu()
 
 
