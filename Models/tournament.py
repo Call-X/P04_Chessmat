@@ -11,18 +11,15 @@ class Tournament(object):
         self.start_date = start_date
         self.end_date = end_date
         self.max_turn = max_turn
-        # self.tournament_player_number = tournament_player_number
-        # self.rounds = rounds
+        self.number_of_round = 4
+        self.round_1_match_list = []
         self.play_style = play_style
 
         # All players registered for the tournament
         self.players = {}
 
-        # All matchs for the tournament
-        self.matchs = {}
-
         # All rounds for the tournament
-        self.rounds = {}
+        self.round_list = {}
 
 
 

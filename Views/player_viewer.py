@@ -68,21 +68,5 @@ Welcome to the Player Selecter modification Menu
         return {'familly_name': player_familly_name, 'first_name': player_first_name, 'rank': player_rank,
                 'id': player_id}
 
-    # def display_all_players_and_choose_one(self, players, tournament):
-    #     print("\n\n")
-    #     print("---- LIST OF PLAYERS ----")
-    #     for id, player in players.items():
-    #         print(str(id) + ": " + player.first_name + " | " +
-    #               player.familly_name + " | " + str(player.rank))
-    #         if id in tournament.players:
-    #         # print(db.gb_players)
-    #         # print(tournament)
-    #         # if id in db.gb_players:
-    #             print("  ---- DEJA INSCRIT ")
-    #     print("\n\n")
-    #     choice = input(
-    #         ">> Enter the player id to add it to the selected tournament >>")
-    #     return choice
-
 
 

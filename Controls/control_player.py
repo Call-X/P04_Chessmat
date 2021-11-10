@@ -32,9 +32,7 @@ class PlayerControl:
                 db.select_data_player_order_by_rank(rank)
                 choice = self.home_menu_control = self.home_menu()
 
-
-
-            if choice_select == "3":
+            if choice_select == "2":
                 choice = self.home_menu_control = self.home_menu()
 
 
@@ -45,8 +43,6 @@ class PlayerControl:
             if choice_select == "1":
                 player = self.view.update_player()
                 db.update_player(player['familly_name'], player['first_name'], player['rank'], player['id'])
-
-                choice = self.home_menu_control = self.home_menu()
 
             if choice == "2":
                 self.home_menu_control = self.home_menu()

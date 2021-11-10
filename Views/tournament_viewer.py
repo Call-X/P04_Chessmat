@@ -1,5 +1,6 @@
 from Models.tournament import Tournament
 from Views.player_viewer import PlayerView
+from Models.match import Match
 
 
 
@@ -17,6 +18,7 @@ class TournamentView:
         self.tournament_max_turn = "tournament_max_turn"
         self.tournament_play_style = "tournament_play_style"
         self.player = PlayerView
+        self.match = Match
 
     def get_new_tournament_information(self):
         while True:
@@ -48,8 +50,7 @@ Welcome to the Tournament Menu
 Welcome to the Tournament Selecter Menu
 1: Select All Tournament and choose one
 2: Select All Player and choose one
-3: Launch a Tournament
-4: Return to the Home Menu
+3: Return to the Home Menu
 
 >> choose you're options >>''')
         return choice
@@ -59,9 +60,9 @@ Welcome to the Tournament Selecter Menu
         print("---- LIST OF TOURNAMENT ----")
         for id, tournament in gb_tournaments.items():
             print(str(id) + ": " + tournament.name + " | " + tournament.location +
-                  " | nombre de joueur: " + str(len(tournament.players)))
+                  " | number of players : " + str(len(tournament.players)))
         print("\n\n")
-        choice = input(">> Enter the tournament id to add a player >>")
+        choice = input(">> Enter the tournament id to choose it >>")
         return choice
 
     def display_all_informations_for_one_tournament(self, tournament):
@@ -78,8 +79,8 @@ Welcome to the Tournament Selecter Menu
         print("\n\n")
         print("---- LIST OF PLAYERS ----")
         for id, player in players.items():
-            print(str(id) + ": " + player.first_name + " | " +
-                  player.familly_name + " | #" + str(player.rank))
+            print('id : ' + str(id) + " | " + player.first_name + " | " +
+                  player.familly_name + " |  " + 'rank : ' + str(player.rank))
             if id in tournament.players:
                 print("  ---- DEJA INSCRIT ")
         print("\n\n")
@@ -92,32 +93,18 @@ Welcome to the Tournament Selecter Menu
         tournament_id = input("What is the id of the tournament you want to erase? : ")
         return tournament_id
 
-    def get_round(self):
-        name_of_the_round = input("Enter the name of the round :  ")
-        tournament_id = input("Enter the id of the tournament : ")
-        return {'name_of_the_round': name_of_the_round, 'tournament_id': tournament_id}
+    def display_round(self):
+        print(self.match.player1.first_name + ' ' + '°°°' + ' ' + 'VS' + ' ' + '°°°' + ' ' + self.match.player2.first_name)
 
-    def get_match_into_tournament(self):
-        tournament_id = input("Enter the id of the tournament : ")
-        round_number = input("Enter the number of the round : ")
-        player1_rank = input("Enter the rank of the player n°1 : ")
-        player2_rank = input("Enter the rank of the player n°2 : ")
-        score = input('f player n°1 : {player1_score} - player n°2 : {player2_score}')
-        return {'tournament_id': tournament_id, 'round_number': round_number, 'player1_rank': player1_rank,
-                'player2_rank': player2_rank, 'score': score}
+    def update_score(self, match):
+        """
+        Ask the user to enter the result of the matches
+        """
+        for match in self.tournament.round_1_players_list:
+            self.display_match_results(match)
 
-    # def display_launch_tournament(self):
-    #     tournament = self.display_all_tournaments_and_choose_one(gb_tournaments)
-    #     try:
-    #         matches, tournament = launch_tournament()
-    #         chess_round = self.tournament.handle_match(matches, tournament)
-    #         self.handle_match_scores(chess_round, tournament)
-    #
-    #     except TypeError:
-    #         pass
-
-    def display_round_results(self, games):
-        for result in games:
+    def display_match_results(self, matchs):
+        for result in matchs:
             if result[0][1] == 1:
                 print(
                     result[0][0].player.familly_name + ' | ' + result[0][0].player.first_name + ' VICTORY')

@@ -2,6 +2,9 @@ import sqlite3
 from sqlite3 import Error
 from Models.tournament import Tournament
 from Models.player import Player
+from Models.round import Round
+from Models.match import Match
+
 
 
 
@@ -32,6 +35,8 @@ class DataBaseService(metaclass=SingletonMeta):
 
         self.gb_players = {}
         self.gb_tournaments = {}
+        self.gb_rounds = {}
+        self.gb_matchs = {}
         try:
             self.connexion = sqlite3.connect("chessmat.db")
             self.connexion.execute("PRAGMA foreign_keys = 1")
@@ -53,12 +58,11 @@ class DataBaseService(metaclass=SingletonMeta):
         # if find players
         if len(players) > 0:
             for p in players:
-                player = Player(*p)  # Player(1, Emile, Miath, 3)
+                player = Player(*p)
+                # Player(1, Emile, Miath, 3)
                 # for example : emile = players[1]
-                #creation de l'objet player dans ma variable globale
+                # creation de l'objet player dans ma variable globale
                 self.gb_players[player.id] = player
-
-
 
         # Load all the tournaments
         tournaments = self.select_all_tournament()
@@ -67,12 +71,32 @@ class DataBaseService(metaclass=SingletonMeta):
                 tournament = Tournament(*t)
                 self.gb_tournaments[tournament.id] = tournament
 
+        # load all rounds
+        rounds = self.select_all_rounds()
+        if len(rounds) > 0:
+            for r in rounds:
+                round = Round(*r)
+                self.gb_rounds[round.id] = round
+
+        # # load all matchs
+        matchs = self.select_all_matchs()
+        if len(matchs) > 0:
+            for m in matchs:
+                match = Match(*m)
+                self.gb_matchs[match.id] = match
+
+        # # load all rounds of one tournament
+        for id, tournament in self.gb_tournaments.items():
+            rows = self.select_all_rounds_in_tournament(tournament.id)
+            if len(rows) > 0:
+                for row in rows:
+                    id = row[1]
+                    self.gb_tournaments[id].round_list[id] = self.gb_rounds[id]
+
         # Select all tournaments where the player is registered
-        # items() permet de parcourir les dictionnaire dans une boucle for
         for id, player in self.gb_players.items():
             rows = self.select_all_tournaments_from_one_player(
                 player.id)
-            # Si il y a des resultats (ici des tournois)
             if len(rows) > 0:
                 for row in rows:
                     tournament_id = row[2]
@@ -91,7 +115,7 @@ class DataBaseService(metaclass=SingletonMeta):
         self.create_table_tournament()
         self.create_table_player()
         self.create_table_player_in_tournament()
-        self.create_table_round()
+        self.create_table_rounds()
         self.create_table_match()
 
     '''Tournament'''
@@ -182,8 +206,8 @@ class DataBaseService(metaclass=SingletonMeta):
         id INTEGER PRIMARY KEY,
         player_id INTEGER,
         tournament_id INTEGER,
-        FOREIGN KEY(player_id) REFERENCES player(id),
-        FOREIGN KEY(tournament_id) REFERENCES tournament(id));''')
+        FOREIGN KEY(player_id) REFERENCES players(id),
+        FOREIGN KEY(tournament_id) REFERENCES tournaments(id));''')
 
     def add_player_into_tournament(self, player_id, tournament_id):
         param = [(player_id, tournament_id)]
@@ -209,7 +233,7 @@ class DataBaseService(metaclass=SingletonMeta):
     def select_all_players_for_one_tournament(self, tournament_id):
         cur = self.connexion.cursor()
         cur.execute(
-            'SELECT * FROM players_in_tournament WHERE id=?', (tournament_id,))
+            'SELECT * FROM players_in_tournament WHERE tournament_id=?', (tournament_id,))
         rows = cur.fetchall()
         return rows
 
@@ -217,41 +241,64 @@ class DataBaseService(metaclass=SingletonMeta):
     '''match'''
     def create_table_match(self):
         cur = self.connexion.cursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS matchs_in_tournament(
+        cur.execute('''CREATE TABLE IF NOT EXISTS matchs (
         id INTEGER PRIMARY KEY,
-        tournament_id INTEGER,
-        player_id_1 INTEGER,
-        player_id_2 INTEGER,
-        FOREIGN KEY(player_id_1) REFERENCES player(id),
-        FOREIGN KEY(player_id_2) REFERENCES player(id),
-        FOREIGN KEY(tournament_id) REFERENCES tournament(id));''')
+        round_id INTEGER,
+        player1_id INTEGER,
+        player2_id INTEGER,
+        results INTEGER,
+        FOREIGN KEY(player1_id) REFERENCES players(id),
+        FOREIGN KEY(player2_id) REFERENCES players(id),
+        FOREIGN KEY(round_id) REFERENCES rounds(id)
+        );''')
+
+    def select_all_matchs(self):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM matchs')
+        rows = cur.fetchall()
+        return rows
 
     def insert_data_matchs(self, match):
-        match = [(match.tournament_id, match.round_number, match.player1, match.player1, match.score)]
+        match = [(match.round_id, match.player1.id, match.player2.id, match.results)]
 
         cur = self.connexion.cursor()
-        cur.executemany('''INSERT INTO players (id, round_number, player1, player1, score ) VALUES ( ?, ?, ?, ?, ? )''',
+        cur.executemany('''INSERT INTO matchs (round_id, player1_id, player2_id, results ) VALUES ( ?, ?, ?, ? )''',
                         match)
         self.connexion.commit()
         return cur.lastrowid
 
     '''round'''
-    def create_table_round(self):
+    def create_table_rounds(self):
         cur = self.connexion.cursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS rounds_in_tournament(
+        cur.execute('''CREATE TABLE IF NOT EXISTS rounds (
         id INTEGER PRIMARY KEY,
-        name TEXT,
-        number INTEGER,
         tournament_id INTEGER,
-        FOREIGN KEY(tournament_id) REFERENCES tournament(id));''')
+        name TEXT,
+        start_time TEXT,
+        end_time TEXT,
+        FOREIGN KEY(tournament_id) REFERENCES tournaments(id));''')
 
-    def insert_data_round(self, round):
-        round = [(round.round_number, round.round_start_time, round.round_end_time)]
+
+    def select_all_rounds(self):
         cur = self.connexion.cursor()
-        cur.executemany('''INSERT INTO players (id, round_number, round_start_time, round_end_time) VALUES 
-        ( ?, ?, ?, ? )''', round)
+        cur.execute('SELECT * FROM rounds')
+        rows = cur.fetchall()
+        return rows
+
+
+    def insert_data_rounds_in_tournament(self, round):
+        round = [(round.tournament_id, round.name, round.start_time, round.end_time)]
+        cur = self.connexion.cursor()
+        cur.executemany('''INSERT INTO rounds (tournament_id, name, start_time, end_time) VALUES 
+        ( ?, ?, ?, ?)''', round)
         self.connexion.commit()
         return cur.lastrowid
+
+    def select_all_rounds_in_tournament(self, tournament_id):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM rounds WHERE tournament_id=?', (tournament_id,))
+        rows = cur.fetchall()
+        return rows
 
     def close(self):
         if self.connexion:
@@ -259,8 +306,5 @@ class DataBaseService(metaclass=SingletonMeta):
 
 
 db = DataBaseService()
-
-
-
 
 
