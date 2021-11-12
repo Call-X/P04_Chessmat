@@ -93,31 +93,29 @@ Welcome to the Tournament Selecter Menu
         tournament_id = input("What is the id of the tournament you want to erase? : ")
         return tournament_id
 
-    def display_round(self):
-        print(self.match.player1.first_name + ' ' + '°°°' + ' ' + 'VS' + ' ' + '°°°' + ' ' + self.match.player2.first_name)
+    def display_round(self, round):
+        for id, match in round.match_list.items():
+            print(match.player1.first_name + ' ' + '°°°' + ' ' + 'VS' + ' ' + '°°°' + ' ' + match.player2.first_name)
+
 
     def update_score(self, match):
-        """
-        Ask the user to enter the result of the matches
-        """
-        for match in self.tournament.round_1_players_list:
-            self.display_match_results(match)
+        print(match.player1.id + ' ' + '°°°' + ' ' + 'VS' + ' ' + '°°°' + ' ' + match.player2.id)
+        result_player = input(f" Please enter the id of the player to know who was winn, loose or was equality : " f" {match.player.id} ")
 
-    def display_match_results(self, matchs):
-        for result in matchs:
-            if result[0][1] == 1:
-                print(
-                    result[0][0].player.familly_name + ' | ' + result[0][0].player.first_name + ' VICTORY')
-            elif result[0][1] == 0.5:
-                print(result[0][0].player.familly_name + ' | ' + result[0][0].player.first_name + ', '
-                      + result[1][0].player.familly_name + ' | ' + result[1][0].player.first_name + ' EQUALITY')
-            else:
-                print(
-                    result[1][0].player.familly_name + ' | ' + result[1][0].player.first_name + ' VICTORY')
+        if result_player == 1:
+            print(f" {match.player.id} : " f" got 1 point :" f"{match.player.point} = 1 ")
+        elif result_player == 2:
+            print(f" {match.player.id} : " f" got 0,5 point :" f"{match.player.point} = 0,5 ")
+        else:
+            print(f" {match.player.id} : " f" got 0 point :" f"{match.player.point} = 0 ")
 
-        print("\n Insert a coin to continue")
-        input()
-        return None
+
+
+
+
+
+
+
 
 
 

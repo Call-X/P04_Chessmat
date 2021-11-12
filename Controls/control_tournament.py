@@ -111,12 +111,11 @@ class TournamentControl:
             new_round = Round(round_id, tournament.id, round_name, start_time)
             # tournament.add_round(tournament, new_round)
             for i in range(median):
-                match = Match(i, round.id, players_sorted[i], players_sorted[i + median])
+                match = Match(i, new_round.id, players_sorted[i], players_sorted[i + median])
                 match_id = db.insert_data_matchs(match)
                 Round.add_match(round, match)
-            for id, match in round.match_list.items():
-                self.view.display_round()
-                # print(match.player1.first_name + ' ' + '°°°' + ' ' + 'VS' + ' ' + '°°°' + ' ' + match.player2.first_name)
+            self.view.display_round(round)
+            self.view.update_score(round)
         return True
 
 

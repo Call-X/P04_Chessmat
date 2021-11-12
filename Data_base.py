@@ -86,8 +86,8 @@ class DataBaseService(metaclass=SingletonMeta):
                 self.gb_matchs[match.id] = match
 
         # # load all rounds of one tournament
-        for id, tournament in self.gb_tournaments.items():
-            rows = self.select_all_rounds_in_tournament(tournament.id)
+        for id, round in self.gb_rounds.items():
+            rows = self.select_all_rounds_in_tournament(round.id)
             if len(rows) > 0:
                 for row in rows:
                     id = row[1]
@@ -95,8 +95,7 @@ class DataBaseService(metaclass=SingletonMeta):
 
         # Select all tournaments where the player is registered
         for id, player in self.gb_players.items():
-            rows = self.select_all_tournaments_from_one_player(
-                player.id)
+            rows = self.select_all_tournaments_from_one_player(player.id)
             if len(rows) > 0:
                 for row in rows:
                     tournament_id = row[2]
@@ -132,16 +131,15 @@ class DataBaseService(metaclass=SingletonMeta):
                 tournament_play_style TEXT);''')
 
     def insert_data_tournament(self, tournament):
-        tournament = [(tournament.tournament_name, tournament.tournament_location, tournament.tournament_start_date,
-                       tournament.tournament_end_date, tournament.tournament_max_turn, tournament.tournament_play_style)]
-
         cur = self.connexion.cursor()
-        cur.executemany('''INSERT INTO tournaments (tournament_name, tournament_location, tournament_start_date,
-        tournament_end_date, tournament_max_turn, tournament_play_style) VALUES ( ?, ?, ?, ?,
-         ?, ?)''', tournament)
+        cur.execute('''INSERT INTO tournaments (tournament_name, tournament_location, tournament_start_date,
+        tournament_end_date, tournament_max_turn, tournament_play_style) VALUES (?, ?, ?, ?,
+         ?, ? )''', (tournament.name, tournament.location, tournament.start_date,
+                     tournament.end_date, tournament.rounds, tournament.play_style))
         self.connexion.commit()
-
-        return cur.lastrowid
+        tournament.id = cur.lastrowid
+        self.gb_tournaments[tournament.id] = tournament
+        return tournament
 
     def select_all_tournament(self):
         cur = self.connexion.cursor()
@@ -152,7 +150,7 @@ class DataBaseService(metaclass=SingletonMeta):
     def update_tournament(self, tournament_name, tournament_location, tournament_start_date, tournament_end_date,
                           tournament_player_number, tournament_max_turn, tournament_play_style, id):
         cur = self.connexion.cursor()
-        cur.execute("UPDATE tournaments SET tournament_name=?, tournament_location=?, tournament_start_date=?,"
+        cur.executemany("UPDATE tournaments SET tournament_name=?, tournament_location=?, tournament_start_date=?,"
                     "tournament_end_date=?, tournament_player_number=?, tournament_max_turn=?, tournament_play_style=? "
                     "WHERE id=?", (tournament_name, tournament_location, tournament_start_date, tournament_end_date,
                                    tournament_player_number, tournament_max_turn, tournament_play_style, id))
@@ -170,13 +168,14 @@ class DataBaseService(metaclass=SingletonMeta):
         rank INTEGER);''')
 
     def insert_data_player(self, player):
-        player = [(player.familly_name, player.first_name, player.rank)]
 
         cur = self.connexion.cursor()
-        cur.executemany('''INSERT INTO players (familly_name, first_name, rank) VALUES ( ?, ?, ?)''', player)
+        cur.execute('''INSERT INTO players (familly_name, first_name, rank) VALUES ( ?, ?, ?)''',
+                    (player.familly_name, player.first_name, player.rank))
         self.connexion.commit()
-
-        return cur.lastrowid
+        player.id = cur.lastrowid
+        self.gb_players[player.id] = player
+        return player
 
     def select_data_player_order_by_rank(self):
         cur = self.connexion.cursor()
@@ -244,11 +243,11 @@ class DataBaseService(metaclass=SingletonMeta):
         cur.execute('''CREATE TABLE IF NOT EXISTS matchs (
         id INTEGER PRIMARY KEY,
         round_id INTEGER,
-        player1_id INTEGER,
-        player2_id INTEGER,
+        player1 INTEGER,
+        player2 INTEGER,
         results INTEGER,
-        FOREIGN KEY(player1_id) REFERENCES players(id),
-        FOREIGN KEY(player2_id) REFERENCES players(id),
+        FOREIGN KEY(player1) REFERENCES players(id),
+        FOREIGN KEY(player2) REFERENCES players(id),
         FOREIGN KEY(round_id) REFERENCES rounds(id)
         );''')
 
@@ -259,13 +258,15 @@ class DataBaseService(metaclass=SingletonMeta):
         return rows
 
     def insert_data_matchs(self, match):
-        match = [(match.round_id, match.player1.id, match.player2.id, match.results)]
-
         cur = self.connexion.cursor()
-        cur.executemany('''INSERT INTO matchs (round_id, player1_id, player2_id, results ) VALUES ( ?, ?, ?, ? )''',
-                        match)
+        cur.execute('''INSERT INTO matchs (round_id, player1, player2, results) VALUES(?, ?, ? , ?)''',
+                    (match.round_id, match.player1.id, match.player2.id, match.results))
         self.connexion.commit()
+        match.id = cur.lastrowid
+        self.gb_matchs[match.id] = match
         return cur.lastrowid
+
+
 
     '''round'''
     def create_table_rounds(self):
@@ -287,11 +288,12 @@ class DataBaseService(metaclass=SingletonMeta):
 
 
     def insert_data_rounds_in_tournament(self, round):
-        round = [(round.tournament_id, round.name, round.start_time, round.end_time)]
         cur = self.connexion.cursor()
-        cur.executemany('''INSERT INTO rounds (tournament_id, name, start_time, end_time) VALUES 
-        ( ?, ?, ?, ?)''', round)
+        cur.execute('''INSERT INTO rounds (tournament_id, name, start_time, end_time) VALUES 
+        ( ?, ?, ?, ?)''', (round.tournament_id, round.name, round.start_time, round.end_time))
         self.connexion.commit()
+        round.id = cur.lastrowid
+        self.gb_rounds[round.id] = round
         return cur.lastrowid
 
     def select_all_rounds_in_tournament(self, tournament_id):
