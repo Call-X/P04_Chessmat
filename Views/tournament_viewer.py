@@ -1,6 +1,7 @@
 from Models.tournament import Tournament
 from Views.player_viewer import PlayerView
 from Models.match import Match
+from Data_base import DataBaseService
 
 
 
@@ -19,6 +20,8 @@ class TournamentView:
         self.tournament_play_style = "tournament_play_style"
         self.player = PlayerView
         self.match = Match
+        self.db = DataBaseService()
+
 
     def get_new_tournament_information(self):
         while True:
@@ -88,36 +91,40 @@ Welcome to the Tournament Selecter Menu
             ">> Enter the player id to add it to the selected tournament >>")
         return choice
 
-
     def erase_tournament_by_id(self):
         tournament_id = input("What is the id of the tournament you want to erase? : ")
         return tournament_id
 
-    def display_round(self, round):
-        for id, match in round.match_list.items():
-            print(match.player1.first_name + ' ' + '°°°' + ' ' + 'VS' + ' ' + '°°°' + ' ' + match.player2.first_name)
+    def update_score_round1(self, match, tournament):
 
+        print(str(match.player1.id) + ' | ' + match.player1.familly_name + ' | ' + match.player1.first_name + ' ' +
+              '°°°' + ' ' + 'VS' + ' ' + '°°°' + ' ' + str(match.player2.id) + ' | ' + match.player2.familly_name +
+              ' | ' + match.player2.first_name)
+        print('\n')
+        results = input(" Please enter the id of the player to know who winn, or 0 in cas of equality : ")
+        print('\n')
+        # if result_player =! match.player1.id or result_player =! match.player2.id or result_player =! 0:
+        #     print ("Error, please enter a valide value")
 
-    def update_score(self, match):
-        print(match.player1.id + ' ' + '°°°' + ' ' + 'VS' + ' ' + '°°°' + ' ' + match.player2.id)
-        result_player = input(f" Please enter the id of the player to know who was winn, loose or was equality : " f" {match.player.id} ")
-
-        if result_player == 1:
-            print(f" {match.player.id} : " f" got 1 point :" f"{match.player.point} = 1 ")
-        elif result_player == 2:
-            print(f" {match.player.id} : " f" got 0,5 point :" f"{match.player.point} = 0,5 ")
+        if int(results) == match.player1.id:
+            match.results = 1
+            tournament.players[match.player1.id].point += 1
+            self.db.update_points(tournament.players[match.player1.id])
+            self.db.update_results(match)
+            print(match.player1.first_name + " : 1  " + match.player2.first_name + " : 0 ")
+        elif int(results) == match.player2.id:
+            match.results = 2
+            tournament.players[match.player2.id].point += 1
+            self.db.update_points(tournament.players[match.player2.id])
+            self.db.update_results(match)
+            print(match.player2.first_name + " : 1  " + match.player1.first_name + " : 0 ")
         else:
-            print(f" {match.player.id} : " f" got 0 point :" f"{match.player.point} = 0 ")
-
-
-
-
-
-
-
-
-
-
-
+            match.results = 0
+            tournament.players[match.player1.id].point += 0.5
+            tournament.players[match.player2.id].point += 0.5
+            self.db.update_points(tournament.players[match.player1.id])
+            self.db.update_points(tournament.players[match.player2.id])
+            self.db.update_results(match)
+            print(match.player1.first_name + " : 0.5  " + match.player2.first_name + " : 0.5 ")
 
 

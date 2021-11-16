@@ -21,6 +21,10 @@ class Tournament(object):
         # All rounds for the tournament
         self.round_list = {}
 
+    @classmethod
+    def add_round(cls, round, tournament):
+        tournament.match_list[round.id] = round
+
 
 
 

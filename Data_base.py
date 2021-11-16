@@ -57,8 +57,10 @@ class DataBaseService(metaclass=SingletonMeta):
         players = self.select_all_players()
         # if find players
         if len(players) > 0:
+
             for p in players:
                 player = Player(*p)
+                player.point = p[4]
                 # Player(1, Emile, Miath, 3)
                 # for example : emile = players[1]
                 # creation de l'objet player dans ma variable globale
@@ -86,12 +88,20 @@ class DataBaseService(metaclass=SingletonMeta):
                 self.gb_matchs[match.id] = match
 
         # # load all rounds of one tournament
-        for id, round in self.gb_rounds.items():
-            rows = self.select_all_rounds_in_tournament(round.id)
+        for id, tournament in self.gb_tournaments.items():
+            rows = self.select_all_rounds_in_tournament(tournament.id)
             if len(rows) > 0:
                 for row in rows:
-                    id = row[1]
-                    self.gb_tournaments[id].round_list[id] = self.gb_rounds[id]
+                    id_round = row[0]
+                    self.gb_tournaments[tournament.id].round_list[id_round] = self.gb_rounds[id_round]
+
+        # load all match from one round
+        for id, round in self.gb_rounds.items():
+            rows = self.select_all_matchs_in_round(round.id)
+            if len(rows) > 0:
+                for row in rows:
+                    id_match = row[0]
+                    self.gb_rounds[round.id].match_list[id_match] = self.gb_matchs[id_match]
 
         # Select all tournaments where the player is registered
         for id, player in self.gb_players.items():
@@ -165,17 +175,25 @@ class DataBaseService(metaclass=SingletonMeta):
         id INTEGER PRIMARY KEY,             
         familly_name TEXT,
         first_name TEXT,
-        rank INTEGER);''')
+        rank INTEGER,
+        point INTEGER);''')
 
     def insert_data_player(self, player):
 
         cur = self.connexion.cursor()
-        cur.execute('''INSERT INTO players (familly_name, first_name, rank) VALUES ( ?, ?, ?)''',
-                    (player.familly_name, player.first_name, player.rank))
+        cur.execute('''INSERT INTO players (familly_name, first_name, rank, point) VALUES ( ?, ?, ?, ?)''',
+                    (player.familly_name, player.first_name, player.rank, player.point))
         self.connexion.commit()
         player.id = cur.lastrowid
         self.gb_players[player.id] = player
         return player
+
+    def update_points(self, player):
+        cur = self.connexion.cursor()
+        cur.execute('''UPDATE players SET point = ? WHERE id = ?''', (player.point, player.id))
+        self.connexion.commit()
+        player.id = cur.lastrowid
+        self.gb_players[player.id] = player
 
     def select_data_player_order_by_rank(self):
         cur = self.connexion.cursor()
@@ -257,6 +275,12 @@ class DataBaseService(metaclass=SingletonMeta):
         rows = cur.fetchall()
         return rows
 
+    def select_all_matchs_in_round(self, round_id):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM matchs WHERE round_id=?', (round_id,))
+        rows = cur.fetchall()
+        return rows
+
     def insert_data_matchs(self, match):
         cur = self.connexion.cursor()
         cur.execute('''INSERT INTO matchs (round_id, player1, player2, results) VALUES(?, ?, ? , ?)''',
@@ -266,7 +290,12 @@ class DataBaseService(metaclass=SingletonMeta):
         self.gb_matchs[match.id] = match
         return cur.lastrowid
 
-
+    def update_results(self, match):
+        cur = self.connexion.cursor()
+        cur.execute('''UPDATE matchs SET results = ? WHERE id = ?''', (match.results, match.id))
+        self.connexion.commit()
+        match.id = cur.lastrowid
+        self.gb_matchs[match.id] = match
 
     '''round'''
     def create_table_rounds(self):

@@ -7,7 +7,7 @@ from Models.round import Round
 from Data_base import db
 from Models.tournament import Tournament
 from datetime import datetime
-from collections import OrderedDict
+
 
 
 class TournamentControl:
@@ -99,7 +99,7 @@ class TournamentControl:
 
     def pairing(self, tournament):
         if len(tournament.round_list) == 0:
-            players_sorted = OrderedDict(sorted(tournament.players.items(), key=lambda player: player[1].rank))
+            players_sorted = sorted(tournament.players.items(), key=lambda player: player[1].rank)
             length = len(players_sorted)
             median = length // 2
 
@@ -109,15 +109,69 @@ class TournamentControl:
             round = Round(1, tournament.id, round_name, start_time)
             round_id = db.insert_data_rounds_in_tournament(round)
             new_round = Round(round_id, tournament.id, round_name, start_time)
-            # tournament.add_round(tournament, new_round)
+            tournament.add_round(tournament, new_round)
             for i in range(median):
-                match = Match(i, new_round.id, players_sorted[i], players_sorted[i + median])
-                match_id = db.insert_data_matchs(match)
+                match = Match(i, new_round.id, players_sorted[i][1], players_sorted[i + median][1])
+                db.insert_data_matchs(match)
                 Round.add_match(round, match)
-            self.view.display_round(round)
-            self.view.update_score(round)
-        return True
+                self.view.update_score_round1(match, tournament)
+            return True
 
+        # Second tour et +
+        else:
+            players_sorted = sorted(tournament.players.items(), key=lambda player: player[1].point)
+            for player_index in range(len(players_sorted)):
+                if player_index == 0:
+                    pass
+                else:
+                    if players_sorted[player_index][1].point == players_sorted[player_index - 1][1].point:
+                        if players_sorted[player_index][1].rank < players_sorted[player_index - 1][1].rank:
+                            players_sorted[player_index - 1], players_sorted[player_index] = \
+                                players_sorted[player_index], players_sorted[player_index - 1]
+                    now = datetime.now()
+                    round_name = 'Round ' + str(len(tournament.round_list) + 1)
+                    start_time = str(now.hour) + ':' + str(now.minute)
+                    round = Round(1, tournament.id, round_name, start_time)
+                    round_id = db.insert_data_rounds_in_tournament(round)
+                    new_round = Round(round_id, tournament.id, round_name, start_time)
+
+                    for player_index in range(0, len(players_sorted)):
+                        if self.is_player_already_in_a_game(players_sorted[player_index][1], new_round):
+                            continue
+                        for opposite_player_index in range(0, len(players_sorted)):
+                            # Not the same player
+                            # Opposite player not already in a game this round
+                            # Both player not already matched together
+                            if players_sorted[player_index][1] != players_sorted[
+                                opposite_player_index][1] and not self.is_player_already_in_a_game(
+                                players_sorted[opposite_player_index][1], new_round) and not \
+                                    self.did_player_already_gamed(players_sorted[player_index][1],
+                                    players_sorted[opposite_player_index][1], tournament):
+                                match = Match(0, new_round.id, players_sorted[player_index][1],
+                                              players_sorted[opposite_player_index][1])
+                                db.insert_data_matchs(match)
+                                Round.add_match(round, match)
+                                self.view.update_score_round1(match, tournament)
+
+                                break
+                    return True
+
+    # Is the player already set for a match ?
+    def is_player_already_in_a_game(self, player, round):
+        for id, match in round.match_list.items():
+            if match.player1.id == player.id or match.player2.id == player.id:
+                return True
+            return False
+
+    def did_player_already_gamed(self, player1, player2, tournament):
+        for key, round in tournament.round_list.items():
+            for key, match in round.match_list.items():
+                if match.player1 == player1.id and\
+                match.player2== player2.id or \
+                match.player2 == player1.id \
+                        and match.player1 == player2.id:
+                    return True
+        return False
 
 class TournamentMenuInput:
     def __init__(self, option, handler):
