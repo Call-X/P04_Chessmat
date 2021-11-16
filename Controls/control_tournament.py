@@ -119,7 +119,7 @@ class TournamentControl:
 
         # Second tour et +
         else:
-            players_sorted = sorted(tournament.players.items(), key=lambda player: player[1].point)
+            players_sorted = sorted(tournament.players.items(), key=lambda player: player[1].point, reverse=True)
             for player_index in range(len(players_sorted)):
                 if player_index == 0:
                     pass
@@ -142,18 +142,15 @@ class TournamentControl:
                             # Not the same player
                             # Opposite player not already in a game this round
                             # Both player not already matched together
-                            if players_sorted[player_index][1] != players_sorted[
-                                opposite_player_index][1] and not self.is_player_already_in_a_game(
-                                players_sorted[opposite_player_index][1], new_round) and not \
-                                    self.did_player_already_gamed(players_sorted[player_index][1],
-                                    players_sorted[opposite_player_index][1], tournament):
-                                match = Match(0, new_round.id, players_sorted[player_index][1],
-                                              players_sorted[opposite_player_index][1])
-                                db.insert_data_matchs(match)
-                                Round.add_match(round, match)
-                                self.view.update_score_round1(match, tournament)
+                            if players_sorted[player_index][1] != players_sorted[opposite_player_index][1]:
+                                if not self.is_player_already_in_a_game(players_sorted[opposite_player_index][1], new_round):
+                                    if not self.did_player_already_gamed(players_sorted[player_index][1], players_sorted[opposite_player_index][1], tournament):
+                                        match = Match(0, new_round.id, players_sorted[player_index][1], players_sorted[opposite_player_index][1])
+                                        db.insert_data_matchs(match)
+                                        Round.add_match(round, match)
+                                        self.view.update_score_round1(match, tournament)
 
-                                break
+                                        break
                     return True
 
     # Is the player already set for a match ?
@@ -166,10 +163,7 @@ class TournamentControl:
     def did_player_already_gamed(self, player1, player2, tournament):
         for key, round in tournament.round_list.items():
             for key, match in round.match_list.items():
-                if match.player1 == player1.id and\
-                match.player2== player2.id or \
-                match.player2 == player1.id \
-                        and match.player1 == player2.id:
+                if (match.player1.id == player1.id and match.player2.id == player2.id) or (match.player2.id == player1.id and match.player1.id == player2.id):
                     return True
         return False
 
