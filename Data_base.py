@@ -84,7 +84,7 @@ class DataBaseService(metaclass=SingletonMeta):
         matchs = self.select_all_matchs()
         if len(matchs) > 0:
             for m in matchs:
-                match = Match(*m)
+                match = Match(m[0], m[1], self.gb_players[m[2]], self.gb_players[m[3]])
                 self.gb_matchs[match.id] = match
 
         # # load all rounds of one tournament
@@ -285,6 +285,7 @@ class DataBaseService(metaclass=SingletonMeta):
         cur = self.connexion.cursor()
         cur.execute('''INSERT INTO matchs (round_id, player1, player2, results) VALUES(?, ?, ? , ?)''',
                     (match.round_id, match.player1.id, match.player2.id, match.results))
+
         self.connexion.commit()
         match.id = cur.lastrowid
         self.gb_matchs[match.id] = match
