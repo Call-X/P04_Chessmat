@@ -1,10 +1,13 @@
-from Model import player
+from Controls.control_game import ControlGame
 
 
-Player1 = player.Player("bogo", "kevin", 12, "12ème")
-print("Je m'appel " + Player1.familyname)
+if __name__ == '__main__':
 
-PlayerE = player.Player("bogo", "kevin", 32, "12ème",)
-print("Je suis classé " + Player1.ranking)
+    game = ControlGame()
+
+    game.start()
+
+
+
 
 

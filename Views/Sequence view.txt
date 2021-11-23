@@ -1,0 +1,28 @@
+I séquence possible de l'appliccation chess mat :
+
+        Menu d'acceuil :
+            1 - se connecter
+            2 - commencer un tournois
+            3 - Ajouter une description du tournois
+            4 - Ajouter un joueur
+            6 - Modifier le Rang d'un joueur
+            7 - Report access
+                    Player list
+                    Current player list
+                    All tournament list
+                    All match list of the Tournamen
+                    All round list of the Tournament
+                8 - Sub report acces
+                        By letter
+                        By ranking
+                        By age
+                        return
+            9 - Quit
+
+Sequence N°1 possible :
+- menu de connection
+- retour sur le menu d'acceuil
+
+Sequence N°2 possible :
+-menu d'accueil
+-demande d'ajout d'un joueur. --> c: 4 : Ajouter un joueur
