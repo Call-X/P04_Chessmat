@@ -40,7 +40,6 @@ class DataBaseService(metaclass=SingletonMeta):
         try:
             self.connexion = sqlite3.connect("chessmat.db")
             self.connexion.execute("PRAGMA foreign_keys = 1")
-            # print("CONNECTION SUCCEED. SQL LITE VERSION " + sqlite3.version)
         except Error as e:
             print(e)
 
@@ -160,10 +159,12 @@ class DataBaseService(metaclass=SingletonMeta):
     def update_tournament(self, tournament_name, tournament_location, tournament_start_date, tournament_end_date,
                           tournament_player_number, tournament_max_turn, tournament_play_style, id):
         cur = self.connexion.cursor()
-        cur.executemany("UPDATE tournaments SET tournament_name=?, tournament_location=?, tournament_start_date=?,"
-                    "tournament_end_date=?, tournament_player_number=?, tournament_max_turn=?, tournament_play_style=? "
-                    "WHERE id=?", (tournament_name, tournament_location, tournament_start_date, tournament_end_date,
-                                   tournament_player_number, tournament_max_turn, tournament_play_style, id))
+        cur.executemany("UPDATE tournaments SET tournament_name=?, tournament_location=?, tournament_start_date=?, "
+                        "tournament_end_date=?, tournament_player_number=?, tournament_max_turn=?, "
+                        "tournament_play_style=? " "WHERE id=?", (tournament_name, tournament_location,
+                                                                  tournament_start_date, tournament_end_date,
+                                                                  tournament_player_number, tournament_max_turn,
+                                                                  tournament_play_style, id))
         self.connexion.commit()
         rows = cur.fetchall()
         return rows
@@ -183,7 +184,8 @@ class DataBaseService(metaclass=SingletonMeta):
     def insert_data_player(self, player):
 
         cur = self.connexion.cursor()
-        cur.execute('''INSERT INTO players (familly_name, first_name, age, gender, rank, point) VALUES ( ?, ?, ?, ?, ?, ?)''',
+        cur.execute('''INSERT INTO players (familly_name, first_name, age, gender, rank, point) VALUES ( ?, ?, ?, ?, 
+        ?, ?)''',
                     (player.familly_name, player.first_name, player.age, player.gender, player.rank, player.point))
         self.connexion.commit()
         player.id = cur.lastrowid
@@ -237,6 +239,8 @@ class DataBaseService(metaclass=SingletonMeta):
         param = [(player_id, tournament_id)]
         cur = self.connexion.cursor()
         cur.executemany('''INSERT INTO players_in_tournament (player_id, tournament_id) VALUES ( ?, ? )''', param)
+        self.gb_players[player_id].tournaments[tournament_id] = self.gb_tournaments[tournament_id]
+        self.gb_tournaments[tournament_id].players[player_id] = self.gb_players[player_id]
         self.connexion.commit()
         return cur.lastrowid
 

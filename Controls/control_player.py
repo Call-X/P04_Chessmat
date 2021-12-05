@@ -30,25 +30,18 @@ class PlayerControl:
             if choice_select == "1":
                 players = db.select_data_player_order_by_rank()
                 self.view.display_all_players(players)
+                self.home_menu_control = self.home_menu()
 
             if choice_select == "2":
                 players = db.select_data_player_order_by_name()
                 self.view.display_all_players(players)
-
-            if choice_select == "3":
-                choice = self.home_menu_control = self.home_menu()
-
-
-        # select modification players
-        if choice == "3":
-            choice_select = self.view.select_modification_players()
-
-            if choice_select == "1":
-                player = self.view.update_player()
-                db.update_player(player['familly_name'], player['first_name'], player['rank'], player['id'])
-
-            if choice_select == "2":
                 self.home_menu_control = self.home_menu()
+
+        if choice == "3":
+            self.home_menu_control = self.home_menu()
+
+
+
 
 
 class PlayerMenuInput:
