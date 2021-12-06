@@ -104,13 +104,12 @@ class PlayerView:
 
         condition = False
         while condition is False:
-            self.rank = input(" ___Player Rank >>>>> ")
-            if self.rank == "":
-                print(" °°° ENTER A SOMETHING °°° ")
-            elif not self.rank.isdigit():
-                print(" °°° ENTER A RANK °°°")
-            else:
+            rank = input(" ___Player Rank >>>>> ")
+            try:
+                self.rank = int(rank)
                 condition = True
+            except ValueError:
+                print(" °°° ENTER A RANK °°°")
             print('\n')
 
         return Player(0, self.familly_name, self.first_name, self.age, self.gender, self.rank)

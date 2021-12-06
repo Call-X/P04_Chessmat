@@ -140,8 +140,7 @@ class TournamentControl:
 
     def pairing(self, tournament):
         if len(tournament.round_list) == 0:
-            players_sorted = sorted(
-                tournament.players.items(), key=lambda player: player[1].rank)
+            players_sorted = sorted(tournament.players.items(), key=lambda player: player[1].rank)
             length = len(players_sorted)
             median = length // 2
 
@@ -157,7 +156,7 @@ class TournamentControl:
             # On créer les matchs et on les ajoute au round
             for i in range(median):
                 match = Match(
-                    i, new_round.id, players_sorted[i][1], players_sorted[i + median ][1])
+                    i, new_round.id, players_sorted[ i ][ 1 ], players_sorted[ i + median ][ 1 ])
                 db.insert_data_matchs(match)
                 Round.add_match(new_round, match)
 
@@ -172,36 +171,36 @@ class TournamentControl:
                 if player_index == len(players_sorted) - 1:
                     pass
                 else:
-                    if players_sorted[player_index + 1][1].point == players_sorted[player_index][1].point:
-                        if players_sorted[player_index + 1][1].rank < players_sorted[player_index][1].rank:
-                            players_sorted[player_index], players_sorted[player_index + 1] = \
-                                players_sorted[player_index +
-                                                1], players_sorted[player_index]
+                    if players_sorted[ player_index + 1 ][ 1 ].point == players_sorted[ player_index ][ 1 ].point:
+                        if players_sorted[ player_index + 1 ][ 1 ].rank < players_sorted[ player_index ][ 1 ].rank:
+                            players_sorted[ player_index ], players_sorted[ player_index + 1 ] = \
+                                players_sorted[ player_index +
+                                                1 ], players_sorted[ player_index ]
 
             now = datetime.now()
             round_name = 'Round ' + str(len(tournament.round_list) + 1)
             start_time = str(now.hour) + ':' + str(now.minute)
             self.round = Round(1, tournament.id, round_name, start_time)
-            round_id = db.insert_data_rounds_in_tournament(round)
+            round_id = db.insert_data_rounds_in_tournament(self.round)
             new_round = Round(round_id, tournament.id, round_name, start_time)
             Tournament.add_round(new_round, tournament)
 
             for player_index in range(len(players_sorted)):
-                if self.is_player_already_in_a_game(players_sorted[player_index][1],
+                if self.is_player_already_in_a_game(players_sorted[ player_index ][ 1 ],
                                                     new_round):
                     continue
                 for opposite_player_index in range(len(players_sorted)):
                     # Not the same player
                     # Opposite player not already in a game this round
                     # Both player not already matched together
-                    if players_sorted[player_index][0] != players_sorted[
-                        opposite_player_index][0] and not self.is_player_already_in_a_game(
-                        players_sorted[opposite_player_index][1],
-                        new_round) and not self.player_already_played(players_sorted[player_index][1],
-                                                                      players_sorted[opposite_player_index][1],
+                    if players_sorted[ player_index ][ 0 ] != players_sorted[
+                        opposite_player_index ][ 0 ] and not self.is_player_already_in_a_game(
+                        players_sorted[ opposite_player_index ][ 1 ],
+                        new_round) and not self.player_already_played(players_sorted[ player_index ][ 1 ],
+                                                                      players_sorted[ opposite_player_index ][ 1 ],
                                                                       tournament):
                         match = Match(0, new_round.id,
-                                      players_sorted[player_index][1], players_sorted[opposite_player_index][1])
+                                      players_sorted[ player_index ][ 1 ], players_sorted[ opposite_player_index ][ 1 ])
                         db.insert_data_matchs(match)
                         Round.add_match(new_round, match)
                         break

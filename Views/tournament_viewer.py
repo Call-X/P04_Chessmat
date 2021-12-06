@@ -201,22 +201,22 @@ class TournamentView:
 
         if int(results) == match.player1.id:
             match.results = 1
-            tournament.players[match.player1.id].point += 1
-            self.db.update_points(tournament.players[match.player1.id])
+            tournament.players[ match.player1.id ].point += 1
+            self.db.update_points(tournament.players[ match.player1.id ])
             self.db.update_results(match)
             print(match.player1.first_name + " : 1  " + match.player2.first_name + " : 0 ")
         elif int(results) == match.player2.id:
             match.results = 2
-            tournament.players[match.player2.id].point += 1
-            self.db.update_points(tournament.players[match.player2.id])
+            tournament.players[ match.player2.id ].point += 1
+            self.db.update_points(tournament.players[ match.player2.id ])
             self.db.update_results(match)
             print(match.player2.first_name + " : 1  " + match.player1.first_name + " : 0 ")
         else:
             match.results = 0
-            tournament.players[match.player1.id].point += 0.5
-            tournament.players[match.player2.id].point += 0.5
-            self.db.update_points(tournament.players[match.player1.id])
-            self.db.update_points(tournament.players[match.player2.id])
+            tournament.players[ match.player1.id ].point += 0.5
+            tournament.players[ match.player2.id ].point += 0.5
+            self.db.update_points(tournament.players[ match.player1.id ])
+            self.db.update_points(tournament.players[ match.player2.id ])
             self.db.update_results(match)
             print(match.player1.first_name + " : 0.5  " + match.player2.first_name + " : 0.5 ")
 
@@ -258,6 +258,7 @@ class TournamentView:
                 elif match.results is None:
                     print('--- ' + match.player1.familly_name + ' VS ' + match.player2.familly_name +
                           ' ---- : MATCH NONE PLAYED YET')
+
 
     # Prints every round from a defined tournament
     def display_all_round_for_one_tournament(self, tournament):
