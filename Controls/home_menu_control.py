@@ -15,13 +15,11 @@ class HomeMenuControl:
 
         choice = self.view.choose_option_game_menu()
 
-
         # Access to the Tournament Manager
         if choice == "1":
             from Controls.control_tournament import TournamentControl
             self.tournament_menu = TournamentControl()
             self.tournament_control = self.tournament_menu()
-
 
         # Access to the Player Manager
         if choice == "2":

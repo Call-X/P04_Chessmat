@@ -15,15 +15,25 @@ class HomeMenuView:
 
 
     def choose_option_game_menu(self):
-        while True:
+        condition = False
+        choice = 0
+        while condition is False:
             choice = input('''
 Welcome to the Game Menu
-1: Tournament Management
-2: Player Management
-3: Quit
+1: { $ Tournament Management $ }
+2: { $$ Player Management $$ }
+3: { $$$ Quit $$$ }
 >> choose you're options >>''')
-
-            return choice
+            print('\n')
+            if choice == "":
+                print(" °°° ENTER A NUMBER IN LINK WITH THE MENU CHOICES °°° ")
+            elif not choice.isdigit():
+                print(" °°° ENTER A NUMBER IN LINK WITH THE MENU CHOICES °°° ")
+            elif int(choice) not in [1, 2, 3]:
+                print(" °°° ENTER A NUMBER IN LINK WITH THE MENU CHOICES °°° ")
+            else:
+                condition = True
+        return choice
 
 
 

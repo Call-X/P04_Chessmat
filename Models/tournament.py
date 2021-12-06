@@ -23,7 +23,7 @@ class Tournament(object):
 
     @classmethod
     def add_round(cls, round, tournament):
-        tournament.match_list[round.id] = round
+        tournament.round_list[round.id] = round
 
 
 

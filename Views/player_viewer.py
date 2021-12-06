@@ -1,5 +1,5 @@
 from Models.player import Player
-
+from Models.tournament import Tournament
 
 
 class PlayerView:
@@ -10,63 +10,115 @@ class PlayerView:
         self.familly_name = "familly name"
         self.first_name = "first name"
         self.rank = "rank"
+        self.age = "age"
+        self.gender = "gender"
         self.player_id = 'id'
-
-    def get_new_player(self):
-        while True:
-            # self.player_id = input("player id : ")
-            self.familly_name = input("Enter the familly name player : ").capitalize()
-            self.first_name = input("Enter the fisrt name player: ").capitalize()
-            self.rank = input("Player Rank : ")
-            return Player(0, self.familly_name, self.first_name, self.rank)
+        self.tournament = Tournament
+        self.tournament_id = 'tournament_id'
 
     def choose_option_player(self):
-        while True:
-            choice = input('''
-Welcome to the Player Menu
-1: Create player
-2: Select options player
-3: Modify player
-4: Return to the Home Menu
->> choose you're options >>''')
 
-            return choice
+        condition = False
+        choice = 0
+        while condition is False:
+            choice = input('''
+~~~ Welcome to the Player Menu ~~~
+
+1: { $ Create player $ }
+2: { $$ Select options player $$ }
+3: { $$$ Return to the Home Menu $$$ }
+>> choose you're options >>''')
+            if choice == "":
+                print("  °°° ENTER A NUMBER IN LINK WITH THE MENU CHOICES °°° ")
+            elif not choice.isdigit():
+                print(" °°° ENTER A NUMBER IN LINK WITH THE MENU CHOICES °°° ")
+            elif int(choice) not in [1, 2, 3]:
+                print(" °°° ENTER A NUMBER IN LINK WITH THE MENU CHOICES °°° ")
+            else:
+                condition = True
+        return choice
+
 
     def select_options_players(self):
-        choice = input('''
-Welcome to the Player Selecter Menu
+        condition = False
+        choice = 0
+        while condition is False:
+            choice = input('''
+~~~ Welcome to the Player Selecter Menu ~~~
 
-1: Select player by rank
-2: Return to the Main Menu
-
- 
+1: { * Select player by rank * }
+2: { ** select player order by familly name ** }
+3: { *** Return to the Main Menu *** }
 >> choose you're options >>''')
+            if choice == "":
+                print(" °°° ENTER A NUMBER IN LINK WITH THE MENU CHOICES °°°")
+            elif not choice.isdigit():
+                print(" °°° ENTER A NUMBER IN LINK WITH THE MENU CHOICES °°°")
+            elif int(choice) not in [1, 2, 3]:
+                print(" °°° ENTER A NUMBER IN LINK WITH THE MENU CHOICES °°°")
+            else:
+                condition = True
         return choice
 
-    def select_modification_players(self):
-        choice = input('''
-Welcome to the Player Selecter modification Menu
-1: Update player
-3: Return to the Main Menu
 
->> choose you're options >>''')
-        return choice
+    def get_new_player(self):
+        condition = False
+        while condition is False:
+            self.familly_name = input("___Enter the familly name player > ").capitalize()
+            if self.familly_name == "":
+                print(" °°° ENTER A SOMETHING °°° ")
+            elif self.familly_name.isdigit():
+                print(" °°° ENTER A FAMILLY NAME °°°")
+            else:
+                condition = True
 
-    def select_players_by_rank(self):
-        player_rank = input("What is the rank of the player(s)? : ")
-        return player_rank
+        condition = False
+        while condition is False:
+            self.first_name = input(" ___Enter the fisrt name player >> ").capitalize()
+            if self.first_name == "":
+                print(" °°° ENTER A SOMETHING °°°")
+            elif self.first_name.isdigit():
+                print(" °°° ENTER A FIRST NAME NAME °°°")
+            else:
+                condition = True
 
-    def erase_player_by_rank(self):
-        player_rank = input("What is the rank of the player(s) you want to erase? : ")
-        return player_rank
+        condition = False
+        while condition is False:
+            self.age = input(" ___Enter your age >>>  ")
+            if self.age == "":
+                print(" °°° ENTER A SOMETHING °°° ")
+            elif not self.age.isdigit():
+                print(" °°° ENTER AN AGE °°° ")
+            else:
+                condition = True
 
-    def update_player(self):
-        player_familly_name = input("What is the familly name of the player(s) you want to update? : ")
-        player_first_name = input("What is the first name of the player(s) you want to update? : ")
-        player_rank = input("What is the rank of the player(s) you want to update? : ")
-        player_id = input("What is the id of the player(s) you want to update? : ")
-        return {'familly_name': player_familly_name, 'first_name': player_first_name, 'rank': player_rank,
-                'id': player_id}
+        condition = False
+        while condition is False:
+            self.gender = input(" ___Enter your gender >>>> ")
+            if self.gender == "":
+                print(" °°° ENTER A SOMETHING °°° ")
+            elif self.gender.isdigit():
+                print(" °°° ENTER A GENDER °°° ")
+            else:
+                condition = True
+
+        condition = False
+        while condition is False:
+            rank = input(" ___Player Rank >>>>> ")
+            try:
+                self.rank = int(rank)
+                condition = True
+            except ValueError:
+                print(" °°° ENTER A RANK °°°")
+            print('\n')
+
+        return Player(0, self.familly_name, self.first_name, self.age, self.gender, self.rank)
+
+
+    def display_all_players(self, sorted_player):
+        for player in sorted_player:
+            print("Name: " + player[1] + " || rank: " + str(player[5]))
+
 
 
 

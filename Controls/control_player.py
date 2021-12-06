@@ -3,13 +3,13 @@ from Controls.home_menu_control import HomeMenuControl
 from Data_base import db
 
 
+
 class PlayerControl:
     def __init__(self):
         self.player_menu = PlayerMenu()
         self.view = PlayerView(self.player_menu)
         self.home_menu = HomeMenuControl()
         self.DataBaseService = db
-
 
 
     def __call__(self):
@@ -28,24 +28,20 @@ class PlayerControl:
             choice_select = self.view.select_options_players()
 
             if choice_select == "1":
-                rank = self.view.select_players_by_rank()
-                db.select_data_player_order_by_rank(rank)
-                choice = self.home_menu_control = self.home_menu()
+                players = db.select_data_player_order_by_rank()
+                self.view.display_all_players(players)
+                self.home_menu_control = self.home_menu()
 
             if choice_select == "2":
-                choice = self.home_menu_control = self.home_menu()
-
-
-        # select modification players
-        if choice == "3":
-            choice_select = self.view.select_modification_players()
-
-            if choice_select == "1":
-                player = self.view.update_player()
-                db.update_player(player['familly_name'], player['first_name'], player['rank'], player['id'])
-
-            if choice == "2":
+                players = db.select_data_player_order_by_name()
+                self.view.display_all_players(players)
                 self.home_menu_control = self.home_menu()
+
+        if choice == "3":
+            self.home_menu_control = self.home_menu()
+
+
+
 
 
 class PlayerMenuInput:

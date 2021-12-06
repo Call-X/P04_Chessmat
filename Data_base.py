@@ -40,7 +40,6 @@ class DataBaseService(metaclass=SingletonMeta):
         try:
             self.connexion = sqlite3.connect("chessmat.db")
             self.connexion.execute("PRAGMA foreign_keys = 1")
-            # print("CONNECTION SUCCEED. SQL LITE VERSION " + sqlite3.version)
         except Error as e:
             print(e)
 
@@ -60,7 +59,7 @@ class DataBaseService(metaclass=SingletonMeta):
 
             for p in players:
                 player = Player(*p)
-                player.point = p[4]
+                player.point = p[6]
                 # Player(1, Emile, Miath, 3)
                 # for example : emile = players[1]
                 # creation de l'objet player dans ma variable globale
@@ -84,7 +83,7 @@ class DataBaseService(metaclass=SingletonMeta):
         matchs = self.select_all_matchs()
         if len(matchs) > 0:
             for m in matchs:
-                match = Match(m[0], m[1], self.gb_players[m[2]], self.gb_players[m[3]])
+                match = Match(m[0], m[1], self.gb_players[m[2]], self.gb_players[m[3]], m[4])
                 self.gb_matchs[match.id] = match
 
         # # load all rounds of one tournament
@@ -160,10 +159,12 @@ class DataBaseService(metaclass=SingletonMeta):
     def update_tournament(self, tournament_name, tournament_location, tournament_start_date, tournament_end_date,
                           tournament_player_number, tournament_max_turn, tournament_play_style, id):
         cur = self.connexion.cursor()
-        cur.executemany("UPDATE tournaments SET tournament_name=?, tournament_location=?, tournament_start_date=?,"
-                    "tournament_end_date=?, tournament_player_number=?, tournament_max_turn=?, tournament_play_style=? "
-                    "WHERE id=?", (tournament_name, tournament_location, tournament_start_date, tournament_end_date,
-                                   tournament_player_number, tournament_max_turn, tournament_play_style, id))
+        cur.executemany("UPDATE tournaments SET tournament_name=?, tournament_location=?, tournament_start_date=?, "
+                        "tournament_end_date=?, tournament_player_number=?, tournament_max_turn=?, "
+                        "tournament_play_style=? " "WHERE id=?", (tournament_name, tournament_location,
+                                                                  tournament_start_date, tournament_end_date,
+                                                                  tournament_player_number, tournament_max_turn,
+                                                                  tournament_play_style, id))
         self.connexion.commit()
         rows = cur.fetchall()
         return rows
@@ -175,14 +176,17 @@ class DataBaseService(metaclass=SingletonMeta):
         id INTEGER PRIMARY KEY,             
         familly_name TEXT,
         first_name TEXT,
+        age INTEGER,
+        gender TEXT,
         rank INTEGER,
         point INTEGER);''')
 
     def insert_data_player(self, player):
 
         cur = self.connexion.cursor()
-        cur.execute('''INSERT INTO players (familly_name, first_name, rank, point) VALUES ( ?, ?, ?, ?)''',
-                    (player.familly_name, player.first_name, player.rank, player.point))
+        cur.execute('''INSERT INTO players (familly_name, first_name, age, gender, rank, point) VALUES ( ?, ?, ?, ?, 
+        ?, ?)''',
+                    (player.familly_name, player.first_name, player.age, player.gender, player.rank, player.point))
         self.connexion.commit()
         player.id = cur.lastrowid
         self.gb_players[player.id] = player
@@ -192,12 +196,17 @@ class DataBaseService(metaclass=SingletonMeta):
         cur = self.connexion.cursor()
         cur.execute('''UPDATE players SET point = ? WHERE id = ?''', (player.point, player.id))
         self.connexion.commit()
-        player.id = cur.lastrowid
         self.gb_players[player.id] = player
 
     def select_data_player_order_by_rank(self):
         cur = self.connexion.cursor()
         cur.execute('SELECT * FROM players ORDER BY rank')
+        rows = cur.fetchall()
+        return rows
+
+    def select_data_player_order_by_name(self):
+        cur = self.connexion.cursor()
+        cur.execute('SELECT * FROM players ORDER BY familly_name')
         rows = cur.fetchall()
         return rows
 
@@ -230,6 +239,8 @@ class DataBaseService(metaclass=SingletonMeta):
         param = [(player_id, tournament_id)]
         cur = self.connexion.cursor()
         cur.executemany('''INSERT INTO players_in_tournament (player_id, tournament_id) VALUES ( ?, ? )''', param)
+        self.gb_players[player_id].tournaments[tournament_id] = self.gb_tournaments[tournament_id]
+        self.gb_tournaments[tournament_id].players[player_id] = self.gb_players[player_id]
         self.connexion.commit()
         return cur.lastrowid
 
@@ -295,7 +306,6 @@ class DataBaseService(metaclass=SingletonMeta):
         cur = self.connexion.cursor()
         cur.execute('''UPDATE matchs SET results = ? WHERE id = ?''', (match.results, match.id))
         self.connexion.commit()
-        match.id = cur.lastrowid
         self.gb_matchs[match.id] = match
 
     '''round'''
@@ -331,6 +341,13 @@ class DataBaseService(metaclass=SingletonMeta):
         cur.execute('SELECT * FROM rounds WHERE tournament_id=?', (tournament_id,))
         rows = cur.fetchall()
         return rows
+
+    def update_end_time(self, round):
+        cur = self.connexion.cursor()
+        cur.execute('''UPDATE rounds SET end_time = ? WHERE id = ?''',
+                    (round.end_time, round.id))
+        self.connexion.commit()
+        self.gb_rounds[round.id] = round
 
     def close(self):
         if self.connexion:
