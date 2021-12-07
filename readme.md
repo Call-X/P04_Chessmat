@@ -3,8 +3,11 @@
 
 
 ## Demande client:
-Mon responsable d'équipe m'a demandé de développer une version béta d'un programme afin de suivre les prix des livres chez Books to Scrape, un revendeur de livres en ligne.
-Il s'agira d'une application exécutable à la demande visant à récupérer les prix au moment de son exécution.
+```
+Edouard, in charge of a Chess Club wish to get an application to manage Tournaments Chess Event 
+off line and produce reports in the link with Tournaments
+```
+
 
 ## Chess Mate  Version 1.0 Python version used : Python 3.9
 ## Chess Mate Management
